@@ -1,0 +1,60 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+section {
+  @apply px-8 py-16 mx-auto max-w-5xl;
+}
+
+body {
+  @apply text-gray-100 bg-gray-900 font-sans;
+  @apply leading-normal tracking-normal text-base font-normal break-words;
+}
+
+main {
+  @apply text-center;
+  @apply p-4;
+  @apply mx-auto;
+}
+
+button {
+  @apply py-2 px-8 rounded border border-gray-500;
+  @apply border-gray-600 shadow-md;
+  @apply outline-none;
+}
+
+@screen sm {
+  h1 {
+    @apply max-w-none;
+  }
+}
+
+h2,
+h3,
+h4,
+h5 {
+  @apply text-indigo-300;
+}
+
+span {
+  @apply text-indigo-300;
+}
+
+a {
+  @apply text-gray-50;
+}
+
+p {
+  @apply tracking-wide;
+}
+
+input {
+  @apply w-full bg-opacity-50 rounded border border-gray-900 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out;
+  @apply mb-2;
+}
