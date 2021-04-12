@@ -2246,7 +2246,7 @@ const components = [
     return _slug_;
   })
 ];
-const client_component_lookup = {".svelte/build/runtime/internal/start.js": "start-9f0f937e.js", "src/routes/index.svelte": "pages\\index.svelte-07e692f1.js", "src/routes/terms-of-service/index.svelte": "pages\\terms-of-service\\index.svelte-008338c3.js", "src/routes/privacy-policy/index.svelte": "pages\\privacy-policy\\index.svelte-4442e628.js", "src/routes/changelog/index.svelte": "pages\\changelog\\index.svelte-f077f2de.js", "src/routes/dashboard/index.svelte": "pages\\dashboard\\index.svelte-14bd038b.js", "src/routes/features/index.svelte": "pages\\features\\index.svelte-fd9f39e0.js", "src/routes/contact/index.svelte": "pages\\contact\\index.svelte-ce3d9714.js", "src/routes/pricing/index.svelte": "pages\\pricing\\index.svelte-ee0ff8b3.js", "src/routes/logout/index.svelte": "pages\\logout\\index.svelte-f2589f98.js", "src/routes/signup/index.svelte": "pages\\signup\\index.svelte-5e9b0727.js", "src/routes/about/index.svelte": "pages\\about\\index.svelte-fa47f5a8.js", "src/routes/login/index.svelte": "pages\\login\\index.svelte-8655f1b6.js", "src/routes/blog/index.svelte": "pages\\blog\\index.svelte-cafcd661.js", "src/routes/docs/index.svelte": "pages\\docs\\index.svelte-3087454f.js", "src/routes/docs/[slug].svelte": "pages\\docs\\[slug].svelte-148dfd9a.js"};
+const client_component_lookup = {".svelte/build/runtime/internal/start.js": "start-7744935a.js", "src/routes/index.svelte": "pages\\index.svelte-ada62721.js", "src/routes/terms-of-service/index.svelte": "pages\\terms-of-service\\index.svelte-475faa6f.js", "src/routes/privacy-policy/index.svelte": "pages\\privacy-policy\\index.svelte-240f436a.js", "src/routes/changelog/index.svelte": "pages\\changelog\\index.svelte-a39e035d.js", "src/routes/dashboard/index.svelte": "pages\\dashboard\\index.svelte-bd2033ee.js", "src/routes/features/index.svelte": "pages\\features\\index.svelte-b0b5345b.js", "src/routes/contact/index.svelte": "pages\\contact\\index.svelte-2821c70c.js", "src/routes/pricing/index.svelte": "pages\\pricing\\index.svelte-7d804030.js", "src/routes/logout/index.svelte": "pages\\logout\\index.svelte-d654e5ce.js", "src/routes/signup/index.svelte": "pages\\signup\\index.svelte-33e5c5f5.js", "src/routes/about/index.svelte": "pages\\about\\index.svelte-1158a039.js", "src/routes/login/index.svelte": "pages\\login\\index.svelte-ec6c2559.js", "src/routes/blog/index.svelte": "pages\\blog\\index.svelte-02a0a968.js", "src/routes/docs/index.svelte": "pages\\docs\\index.svelte-f808f0f0.js", "src/routes/docs/[slug].svelte": "pages\\docs\\[slug].svelte-ebba7828.js"};
 const manifest = {
   assets: [{file: "favicon.ico", size: 1150, type: "image/vnd.microsoft.icon"}, {file: "images/app-image.png", size: 129536, type: "image/png"}, {file: "images/feature-image2.jpg", size: 233417, type: "image/jpeg"}, {file: "logo-192.png", size: 4760, type: "image/png"}, {file: "logo-512.png", size: 13928, type: "image/png"}, {file: "logo.webp", size: 7916, type: "image/webp"}, {file: "logo_light.webp", size: 5204, type: "image/webp"}, {file: "robots.txt", size: 67, type: "text/plain"}],
   layout: () => Promise.resolve().then(function() {
@@ -2262,7 +2262,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/index.svelte", load: components[0]}],
       css: ["assets/start-2d3e93df.css", "assets/pages\\index.svelte-49f9a304.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\index.svelte-07e692f1.js", "chunks/signup-5c5c6132.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\index.svelte-ada62721.js", "chunks/signup-34f73dfd.js"]
     },
     {
       type: "page",
@@ -2270,7 +2270,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/terms-of-service/index.svelte", load: components[1]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\terms-of-service\\index.svelte-008338c3.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\terms-of-service\\index.svelte-475faa6f.js"]
     },
     {
       type: "page",
@@ -2278,7 +2278,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/privacy-policy/index.svelte", load: components[2]}],
       css: ["assets/start-2d3e93df.css", "assets/pages\\privacy-policy\\index.svelte-02bf4239.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\privacy-policy\\index.svelte-4442e628.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\privacy-policy\\index.svelte-240f436a.js"]
     },
     {
       type: "page",
@@ -2286,7 +2286,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/changelog/index.svelte", load: components[3]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\changelog\\index.svelte-f077f2de.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\changelog\\index.svelte-a39e035d.js"]
     },
     {
       type: "page",
@@ -2294,7 +2294,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/dashboard/index.svelte", load: components[4]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\dashboard\\index.svelte-14bd038b.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\dashboard\\index.svelte-bd2033ee.js"]
     },
     {
       type: "page",
@@ -2302,7 +2302,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/features/index.svelte", load: components[5]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\features\\index.svelte-fd9f39e0.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\features\\index.svelte-b0b5345b.js"]
     },
     {
       type: "page",
@@ -2310,7 +2310,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/contact/index.svelte", load: components[6]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\contact\\index.svelte-ce3d9714.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\contact\\index.svelte-2821c70c.js"]
     },
     {
       type: "page",
@@ -2318,7 +2318,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/pricing/index.svelte", load: components[7]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\pricing\\index.svelte-ee0ff8b3.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\pricing\\index.svelte-7d804030.js"]
     },
     {
       type: "page",
@@ -2326,7 +2326,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/logout/index.svelte", load: components[8]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\logout\\index.svelte-f2589f98.js", "chunks/utils-cf215c6e.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\logout\\index.svelte-d654e5ce.js", "chunks/utils-cf215c6e.js"]
     },
     {
       type: "page",
@@ -2334,7 +2334,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/signup/index.svelte", load: components[9]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\signup\\index.svelte-5e9b0727.js", "chunks/signup-5c5c6132.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\signup\\index.svelte-33e5c5f5.js", "chunks/signup-34f73dfd.js"]
     },
     {
       type: "page",
@@ -2342,7 +2342,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/about/index.svelte", load: components[10]}],
       css: ["assets/start-2d3e93df.css", "assets/pages\\about\\index.svelte-137023d0.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\about\\index.svelte-fa47f5a8.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\about\\index.svelte-1158a039.js"]
     },
     {
       type: "page",
@@ -2350,7 +2350,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/login/index.svelte", load: components[11]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\login\\index.svelte-8655f1b6.js", "chunks/utils-cf215c6e.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\login\\index.svelte-ec6c2559.js", "chunks/utils-cf215c6e.js"]
     },
     {
       type: "endpoint",
@@ -2374,7 +2374,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/blog/index.svelte", load: components[12]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\blog\\index.svelte-cafcd661.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\blog\\index.svelte-02a0a968.js"]
     },
     {
       type: "page",
@@ -2382,7 +2382,7 @@ const manifest = {
       params: empty,
       parts: [{id: "src/routes/docs/index.svelte", load: components[13]}],
       css: ["assets/start-2d3e93df.css", "assets/pages\\docs\\index.svelte-80485e00.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\docs\\index.svelte-3087454f.js", "chunks/snarkdown.es-0fe202fd.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\docs\\index.svelte-f808f0f0.js", "chunks/snarkdown.es-0fe202fd.js"]
     },
     {
       type: "page",
@@ -2390,7 +2390,7 @@ const manifest = {
       params: (m) => ({slug: d(m[1])}),
       parts: [{id: "src/routes/docs/[slug].svelte", load: components[14]}],
       css: ["assets/start-2d3e93df.css"],
-      js: ["start-9f0f937e.js", "chunks/vendor-3aa37ad1.js", "chunks/singletons-6b53f818.js", "chunks/stores-12deee46.js", "chunks/button-6d1f3f37.js", "pages\\docs\\[slug].svelte-148dfd9a.js", "chunks/snarkdown.es-0fe202fd.js"]
+      js: ["start-7744935a.js", "chunks/vendor-4f3ca94d.js", "chunks/singletons-6b53f818.js", "chunks/stores-24f88619.js", "chunks/button-b75938ba.js", "pages\\docs\\[slug].svelte-ebba7828.js", "chunks/snarkdown.es-0fe202fd.js"]
     }
   ]
 };
@@ -2416,7 +2416,7 @@ function render(request, {
     template,
     manifest,
     target: "#svelte",
-    entry: "/./_app/start-9f0f937e.js",
+    entry: "/./_app/start-7744935a.js",
     root: Root,
     hooks,
     dev: false,
