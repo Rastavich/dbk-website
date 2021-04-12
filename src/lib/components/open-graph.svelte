@@ -13,7 +13,7 @@
   <title>{title}</title>
   <meta
     name="keywords"
-    content="secure, business security, security, cloud ide, github ide, gitlab ide, javascript, online ide, web ide, code review"
+    content="secure, business security, security, Store passwords app, Store passwords in chrome, Store passwords on iphone, mobile app, app, android app, ios app"
   />
   <meta name="description" content={description} />
 
