@@ -52,6 +52,7 @@ a {
 
 p {
   @apply tracking-wide;
+  /* width: clamp(45ch, 50%, 75ch); */
 }
 
 input {

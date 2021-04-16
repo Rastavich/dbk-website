@@ -9,7 +9,7 @@
   "devDependencies": {
     "@sveltejs/adapter-node": "next",
     "@sveltejs/adapter-vercel": "^1.0.0-next.10",
-    "@sveltejs/kit": "^1.0.0-next.71",
+    "@sveltejs/kit": "^1.0.0-next.75",
     "autoprefixer": "^10.2.5",
     "cssnano": "^4.1.10",
     "postcss": "^8.2.7",

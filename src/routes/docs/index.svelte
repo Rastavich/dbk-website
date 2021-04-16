@@ -1,6 +1,7 @@
 <script context="module">
   import { GRAPHQL_URI } from "../../lib/config";
   import { GET_DOCS } from "../../lib/graphql/requests";
+  console.log(GRAPHQL_URI);
 
   /**
    * @type {import('@sveltejs/kit').Load}
@@ -18,6 +19,7 @@
 
       items = await res.json();
       items = items.data.documentations;
+      console.log(items.data.documentations)
     } catch (e) {
       console.log(e.message);
     }
@@ -45,6 +47,7 @@
 </script>
 
 <svelte:head>
+
   <title>Docs</title>
   <meta
     name="Description"
@@ -54,6 +57,7 @@
 </svelte:head>
 
 {#await promise}
+
   <p>...loading</p>
 {:then data}
   <div class="flex md:flex-row-reverse flex-wrap z-10 w-full max-w-8xl">
@@ -66,11 +70,6 @@
           class="m-2 p-6 bg-gray-200 rounded  max-h-screen list-reset lg:flex md:flex flex-column md:flex-col text-center md:text-left mt-20"
         >
           {#each items as doc}
-            <!-- we're using the non-standard `rel=prefetch` attribute to
-                    tell Sapper to load the data for the page as soon as
-                    the user hovers over the link or taps it, instead of
-                    waiting for the 'click' event -->
-
             <div
               class="lg:flex-none flex w-full md:max-w-xs bg-purple text-black"
             >
@@ -127,6 +126,7 @@
         /></svg
       >
     </button>
+
   </div>
 {/await}
 
