@@ -1,5 +1,4 @@
 import * as cookie from "cookie";
-// import * as cookie from "cookie-parse";
 
 export async function getContext({ headers }) {
   const cookies = cookie.parse(headers.cookie || "");

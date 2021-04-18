@@ -1,15 +1,13 @@
 dependencies:
   '@tailwindcss/typography': 0.4.0_tailwindcss@2.0.4
-  node-fetch: 2.6.1
+  cookie: 0.4.1
   snarkdown: 2.0.0
   string-hash: 1.1.3
   uuid: 8.3.2
 devDependencies:
-  '@sveltejs/adapter-node': 1.0.0-next.12
   '@sveltejs/adapter-vercel': 1.0.0-next.10
-  '@sveltejs/kit': 1.0.0-next.70_svelte@3.35.0+vite@2.1.2
+  '@sveltejs/kit': 1.0.0-next.79_svelte@3.35.0+vite@2.1.2
   autoprefixer: 10.2.5_postcss@8.2.8
-  cookie: 0.4.1
   cssnano: 4.1.10
   postcss: 8.2.8
   postcss-load-config: 3.0.1
@@ -56,17 +54,13 @@ packages:
       rollup: ^1.20.0||^2.0.0
     resolution:
       integrity: sha512-TrBhfJkFxA+ER+ew2U2/fHbebhLT/l/2pRk0hfj9KusXUuRXd2v0R58AfaZK9VXDQ4TogOSEmICVrQAA3zFnHQ==
-  /@sveltejs/adapter-node/1.0.0-next.12:
-    dev: true
-    resolution:
-      integrity: sha512-DGP3dT5ijsTV0zmLDmZP8wI4RjZlifGGzA0y4HLoWNEKhZJLDjFDJnNcA+O5S9QBxQOVaYUlAY2z19r+skBVjA==
   /@sveltejs/adapter-vercel/1.0.0-next.10:
     dev: true
     resolution:
       integrity: sha512-hEk1acpk02UsODC9NCF7VtooybXgLlnOX3JIWNkEtqihG6cfyMTOxAl+plT2APknB8i1cUt5FEe/O/r8LGql5Q==
-  /@sveltejs/kit/1.0.0-next.70_svelte@3.35.0+vite@2.1.2:
+  /@sveltejs/kit/1.0.0-next.79_svelte@3.35.0+vite@2.1.2:
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.0-next.5_svelte@3.35.0+vite@2.1.2
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.7_svelte@3.35.0+vite@2.1.2
       cheap-watch: 1.0.3
       sade: 1.7.4
       svelte: 3.35.0
@@ -79,8 +73,8 @@ packages:
       svelte: ^3.32.1
       vite: ^2.1.0
     resolution:
-      integrity: sha512-sMjPmMhYdCrre+TzFOTkb1NCJ2IoHAsJhwK4aXixeyWOcOi+rwE4W89CaJWfelqAI6zhMlm3G+2dgUX+hQfw5Q==
-  /@sveltejs/vite-plugin-svelte/1.0.0-next.5_svelte@3.35.0+vite@2.1.2:
+      integrity: sha512-0Ct/jaEHLweZ6lAbM/6hYIQQ4gUp0SSP0d/8v1Bwx2fYuBaHaraLvn7Q7oGsrjwiPL5V1jh5z0H2Wck8J4MWJg==
+  /@sveltejs/vite-plugin-svelte/1.0.0-next.7_svelte@3.35.0+vite@2.1.2:
     dependencies:
       '@rollup/pluginutils': 4.1.0
       chalk: 4.1.0
@@ -90,16 +84,16 @@ packages:
       slash: 3.0.0
       source-map: 0.7.3
       svelte: 3.35.0
-      svelte-hmr: 0.13.3_svelte@3.35.0
+      svelte-hmr: 0.14.0_svelte@3.35.0
       vite: 2.1.2
     dev: true
     engines:
       node: '>=12.0.0'
     peerDependencies:
-      svelte: ^3.35.0
-      vite: ^2.1.2
+      svelte: ^3.37.0
+      vite: ^2.1.5
     resolution:
-      integrity: sha512-RVjafsqziWwnQm8VEy2y0qNaugNDvRd8tTaCt9rjgQkqaS/BDiyDCluXxA28PRC+ddZjvwUeq9k+0EfbLVObfg==
+      integrity: sha512-ENvKYY36jrvFP7h1G87k5uOoEh5UM1m8n40J2duqV/R3wHnxfW81SCR1aXo+5CVU8Prm3/jtS4TWs8CUTqO1fw==
   /@tailwindcss/typography/0.4.0_tailwindcss@2.0.4:
     dependencies:
       lodash.castarray: 4.4.0
@@ -378,7 +372,7 @@ packages:
     resolution:
       integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
   /cookie/0.4.1:
-    dev: true
+    dev: false
     engines:
       node: '>= 0.6'
     resolution:
@@ -1094,12 +1088,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Yt3384If5H6BYGVHiHwTL+99OzJKHhgp82S8/dktEK73T26BazdgZ4JZh92xSVtGNJvz9UbXdNAc5hcrXV42vw==
-  /node-fetch/2.6.1:
-    dev: false
-    engines:
-      node: 4.x || >=6.0.0
-    resolution:
-      integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
   /node-releases/1.1.71:
     dev: true
     resolution:
@@ -1785,14 +1773,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
-  /svelte-hmr/0.13.3_svelte@3.35.0:
+  /svelte-hmr/0.14.0_svelte@3.35.0:
     dependencies:
       svelte: 3.35.0
     dev: true
     peerDependencies:
       svelte: '>=3.19.0'
     resolution:
-      integrity: sha512-gagW62pLQ2lULmvNA3pIZu9pBCYOaGu3rQikUOv6Nokz5VxUgT9/mQLfMxj9phDEKHCg/lgr3i6PkqZDbO9P2Q==
+      integrity: sha512-Rc4w11U+U30m/cHqOJ/xioFSEAY5fd5muiQC7FL6XJuJAuB2OIJoEZl3KEJR2uO1/f4Bw0PdrugtbxcngSsOtQ==
   /svelte-preprocess/4.6.9_bfabe6c7bc3d73e76d0bc9dab084c580:
     dependencies:
       '@types/pug': 2.0.4
@@ -2010,14 +1998,12 @@ packages:
     resolution:
       integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 specifiers:
-  '@sveltejs/adapter-node': next
-  '@sveltejs/adapter-vercel': next
-  '@sveltejs/kit': next
+  '@sveltejs/adapter-vercel': ^1.0.0-next.10
+  '@sveltejs/kit': ^1.0.0-next.78
   '@tailwindcss/typography': ^0.4.0
   autoprefixer: ^10.2.5
   cookie: ^0.4.1
   cssnano: ^4.1.10
-  node-fetch: ^2.6.1
   postcss: ^8.2.7
   postcss-load-config: ^3.0.1
   snarkdown: ^2.0.0

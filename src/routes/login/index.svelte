@@ -1,6 +1,5 @@
 <script context="module">
   export async function load({ session }) {
-    console.log("Sessions:", session);
     if (session.user) {
       return {
         status: 302,
@@ -26,9 +25,8 @@
     loading = true;
     const response = await post(`auth/login`, { email, password });
 
-    console.log(response);
-    // TODO handle network errors
     errors = response.errors;
+
     if (response.user) {
       $session.user = response.user;
       goto("/dashboard");

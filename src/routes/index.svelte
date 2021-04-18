@@ -31,7 +31,7 @@
       <p class="leading-normal text-xl mb-8 text-indigo-300">
         Manage and secure your business's digital business assets and monitor
         your essential business services such as email and website in the
-        simple-to-use Digital Business Keys app
+        simple-to-use Digital Business Keys app.
       </p>
 
       {#if $session.user}

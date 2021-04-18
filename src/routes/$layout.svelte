@@ -4,10 +4,6 @@
   import Header from "$lib/components/layout/header.svelte";
 </script>
 
-<svelte:head>
-  <title>Digital Bussiness Keys</title>
-</svelte:head>
-
 <Header />
 
 <slot />

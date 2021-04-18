@@ -33,12 +33,13 @@ module.exports = {
 
     vite: {
       ssr: {
-        external: Object.keys(pkg.dependencies || {}),
-        noExternal: ["snarkdown", "@tailwindcss/typography", "cookie"],
-        optimizeDeps: {
-          include: [],
-          exclude: ["cookie"],
-        },
+        noExternal:
+          process.env.NODE_ENV === "production"
+            ? [
+                ...Object.keys(pkg.dependencies),
+                ...Object.keys(pkg.devDependencies),
+              ]
+            : [],
       },
     },
   },

@@ -10,10 +10,7 @@ export function respond(body) {
 
   return {
     headers: {
-      "set-cookie": [
-        `jwt=${value}; Path=/; HttpOnly; Secure`,
-        // "user=" + json + "; Max-Age=3600; HttpOnly; Secure",
-      ],
+      "set-cookie": `jwt=${value}; Path=/; HttpOnly; Secure`,
     },
     body,
   };

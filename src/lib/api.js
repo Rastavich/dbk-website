@@ -6,7 +6,7 @@ const base = BASE_LOGIN_URI;
 async function send({ method, data, token }) {
   const opts = { method, headers: {} };
 
-  console.log("Method", method, "Data", data, "Token", token);
+  // console.log("Method", method, "Data", data, "Token", token);
 
   if (data) {
     opts.headers["Content-Type"] = "application/json";
