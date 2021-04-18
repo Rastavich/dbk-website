@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+// import fetch from "node-fetch";
 import { BASE_LOGIN_URI } from "$lib/config";
 
 const base = BASE_LOGIN_URI;

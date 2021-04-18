@@ -34,12 +34,7 @@ module.exports = {
     vite: {
       ssr: {
         external: Object.keys(pkg.dependencies || {}),
-        noExternal: [
-          "node-fetch",
-          "snarkdown",
-          "@tailwindcss/typography",
-          "cookie",
-        ],
+        noExternal: ["snarkdown", "@tailwindcss/typography", "cookie"],
         optimizeDeps: {
           include: [],
           exclude: ["cookie"],
