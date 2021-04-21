@@ -50,7 +50,7 @@
     <div class="w-full md:w-1/2 py-6 text-center">
       <img
         class="w-full z-50 rounded-md"
-        src="/images/feature-image2.jpg"
+        src="/images/feature-image2.webp"
         alt="people building app"
       />
     </div>

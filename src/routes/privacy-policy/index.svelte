@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <section>
   <h1>Privacy Policy</h1>
 

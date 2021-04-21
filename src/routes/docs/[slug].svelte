@@ -27,12 +27,15 @@
 </script>
 
 <script>
+  import OpenGraph from "$lib/components/open-graph.svelte";
   export let pagedata;
 </script>
 
-<svelte:head>
-  <title>{pagedata.title}</title>
-</svelte:head>
+<OpenGraph
+  description="Documentation for Digital Business Keys to explain core concepts such as DNS, Domain Names, Domain Hosts, Emails and more"
+  title="Digital Business Keys - {pagedata.title}"
+  type="website"
+/>
 
 <a class="mt-3 pb-12 text-indigo-300 inline-flex items-center" href="/docs">
   <svg

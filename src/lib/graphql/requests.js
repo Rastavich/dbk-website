@@ -5,10 +5,7 @@ export const GET_DOCS = `
       title
       Slug
       content
-      images {
-        url
-        previewUrl
-      }
+      Description
     }
   }
 `;

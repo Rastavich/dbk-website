@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <script>
   import Button from "$lib/components/generics/button.svelte";
 

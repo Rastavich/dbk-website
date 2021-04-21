@@ -4,7 +4,7 @@
       <img
         alt="feature"
         class="object-cover object-center h-95 w-80"
-        src="/images/app-image.png"
+        src="/images/app-image.webp"
       />
     </div>
     <div

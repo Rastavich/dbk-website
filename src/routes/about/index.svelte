@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <style lang="postcss">
 	h1 {
 		@apply pb-5;
@@ -13,9 +17,7 @@
 	}
 </style>
 
-<svelte:head>
-	<title>About</title>
-</svelte:head>
+
 <div class="px-8 py-16 mx-auto max-w-5xl">
 	<h1>About Us</h1>
 

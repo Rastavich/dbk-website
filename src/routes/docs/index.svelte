@@ -1,4 +1,6 @@
 <script context="module">
+	export const prerender = true;
+
   import { GRAPHQL_URI } from "../../lib/config";
   import { GET_DOCS } from "../../lib/graphql/requests";
   console.log(GRAPHQL_URI);
@@ -36,6 +38,7 @@
 
 <script>
   import snarkdown from "snarkdown";
+  import OpenGraph from "$lib/components/open-graph.svelte";
 
   export let items;
 
@@ -46,15 +49,11 @@
   }
 </script>
 
-<svelte:head>
-
-  <title>Docs</title>
-  <meta
-    name="Description"
-    content="Documentation for Digital Business Keys to explain core concepts like
-  DNS, Domain Names, Domain Hosts, Emails and more"
-  />
-</svelte:head>
+<OpenGraph
+  description="Documentation for Digital Business Keys to explain core concepts such as DNS, Domain Names, Domain Hosts, Emails and more"
+  title="Digital Business Keys - Documentation"
+  type="website"
+/>
 
 {#await promise}
 
