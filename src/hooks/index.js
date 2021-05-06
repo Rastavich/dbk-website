@@ -1,10 +1,9 @@
 import cookie from "cookie";
-import { v4 as uuid } from "@lukeed/uuid";
 
 export async function handle({ request, render }) {
   const cookies = await cookie.parse(request.headers.cookie || "");
   let user;
-  console.log("Cookies :", cookies);
+  // console.log("Cookies :", cookies);
 
   if (cookies.user) {
     user = JSON.parse(cookies.user);
@@ -14,7 +13,7 @@ export async function handle({ request, render }) {
   request.locals.user = user || "";
   request.locals.jwt = jwt || "";
 
-  console.log("Req local user :", request.locals.user);
+  // console.log("Req local user :", request.locals.user);
   if (request.query.has("_method")) {
     request.method = request.query.get("_method").toUpperCase();
   }
@@ -32,7 +31,7 @@ export async function handle({ request, render }) {
 }
 
 export function getSession(request) {
-  console.log("Request Session: ", request);
+  // console.log("Request Session: ", request);
 
   return {
     user: request.locals.user && {

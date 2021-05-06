@@ -1,7 +1,7 @@
 <script context="module">
-  export const prerender = true;
-  export const hydrate = true;
-  export const router = true;
+  // export const prerender = true;
+  // export const hydrate = true;
+  // export const router = true;
 </script>
 
 <section>
