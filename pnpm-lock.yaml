@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@lukeed/uuid': ^2.0.0
-  '@sveltejs/adapter-vercel': ^1.0.0-next.10
+  '@sveltejs/adapter-vercel': ^1.0.0-next.16
   '@sveltejs/kit': ^1.0.0-next.99
   '@tailwindcss/typography': ^0.4.0
   autoprefixer: ^10.2.5
@@ -30,7 +30,7 @@ dependencies:
   string-hash: 1.1.3
 
 devDependencies:
-  '@sveltejs/adapter-vercel': 1.0.0-next.10
+  '@sveltejs/adapter-vercel': 1.0.0-next.16_svelte@3.38.2+vite@2.2.3
   '@sveltejs/kit': 1.0.0-next.99_svelte@3.38.2+vite@2.2.3
   '@tailwindcss/typography': 0.4.0_tailwindcss@2.1.2
   autoprefixer: 10.2.5_postcss@8.2.8
@@ -112,8 +112,34 @@ packages:
       picomatch: 2.2.3
     dev: true
 
-  /@sveltejs/adapter-vercel/1.0.0-next.10:
-    resolution: {integrity: sha512-hEk1acpk02UsODC9NCF7VtooybXgLlnOX3JIWNkEtqihG6cfyMTOxAl+plT2APknB8i1cUt5FEe/O/r8LGql5Q==}
+  /@sveltejs/adapter-vercel/1.0.0-next.16_svelte@3.38.2+vite@2.2.3:
+    resolution: {integrity: sha512-PAIUsg9gCr9BtLA6w6ky3HvqBRVoAzctawcrVR0NFVFAfA4Cjx48xV9uuc1ZqQAIKt8l7S4BmAkqsToVDT88yw==}
+    dependencies:
+      '@sveltejs/kit': 1.0.0-next.98_svelte@3.38.2+vite@2.2.3
+      esbuild: 0.11.19
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+      - svelte
+      - vite
+    dev: true
+
+  /@sveltejs/kit/1.0.0-next.98_svelte@3.38.2+vite@2.2.3:
+    resolution: {integrity: sha512-WAbxMLAmgJ1dwtmRm46dXSYewIIs8ykjl3yWwdqdPrOBY420HQyrvBjMmh9OVyBaCRy/He5blnMWRFDKUqNQng==}
+    engines: {node: '>= 12.17.0'}
+    hasBin: true
+    peerDependencies:
+      svelte: ^3.34.0
+      vite: ^2.2.3
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.9_svelte@3.38.2+vite@2.2.3
+      cheap-watch: 1.0.3
+      sade: 1.7.4
+      svelte: 3.38.2
+      vite: 2.2.3
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
     dev: true
 
   /@sveltejs/kit/1.0.0-next.99_svelte@3.38.2+vite@2.2.3:
@@ -944,6 +970,12 @@ packages:
       is-callable: 1.2.3
       is-date-object: 1.0.2
       is-symbol: 1.0.3
+    dev: true
+
+  /esbuild/0.11.19:
+    resolution: {integrity: sha512-X2h8UThAwKLxmc1OChHVegIScphS/qU9cUB5vCEV2T0A024E8Ptpg9xssXXcs+j1uEgXrDJZuVRzx2JsmGzq7A==}
+    hasBin: true
+    requiresBuild: true
     dev: true
 
   /esbuild/0.9.3:
