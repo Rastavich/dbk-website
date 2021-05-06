@@ -3,15 +3,19 @@ export function respond(body) {
     return { status: 401, body };
   }
 
-  const json = JSON.stringify(body.user);
-  const value = Buffer.from(json).toString("base64");
+  // console.log("Body.User", body.user);
 
-  console.log("JSON", json);
+  const user = JSON.stringify(body.user);
+  const jwt = body.jwt;
 
   return {
     headers: {
-      "set-cookie": `jwt=${value}; Path=/; HttpOnly; Secure`,
+      "set-cookie": [
+        `jwt=${jwt}; Path=/; HttpOnly; Secure`,
+        `user=${user}; Path=/; HttpOnly; Secure`,
+      ],
     },
+
     body,
   };
 }

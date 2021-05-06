@@ -16,7 +16,7 @@
   type="website"
 />
 
-<div class="pt-24">
+<div class="pt-0 md:pt-5 lg:pt-24">
   <div
     class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
   >
@@ -38,7 +38,7 @@
         <Button text="Dashboard" href="dashboard" />
       {:else}
         <div
-          class="flex-initial justify-center items-start text-center md:text-left"
+          class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left"
         >
           <Button text="Try Free!" href="signup" />
 

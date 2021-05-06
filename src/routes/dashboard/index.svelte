@@ -1,7 +1,7 @@
 <script context="module">
   export function load({ session }) {
     const { user } = session;
-    console.log(user);
+    console.log('Session Dashboard:', session);
     if (!user) {
       return {
         status: 302,

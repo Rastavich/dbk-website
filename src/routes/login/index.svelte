@@ -1,6 +1,6 @@
 <script context="module">
   export async function load({ session }) {
-    if (session.user) {
+    if (session.jwt) {
       return {
         status: 302,
         redirect: "/",

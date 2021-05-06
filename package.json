@@ -8,28 +8,31 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-vercel": "^1.0.0-next.10",
-    "@sveltejs/kit": "^1.0.0-next.94",
+    "@sveltejs/kit": "^1.0.0-next.99",
+    "@tailwindcss/typography": "^0.4.0",
     "autoprefixer": "^10.2.5",
+    "cookie": "^0.4.1",
     "cssnano": "^4.1.10",
     "postcss": "^8.2.7",
     "postcss-load-config": "^3.0.1",
-    "svelte": "^3.29.0",
-    "svelte-preprocess": "^4.6.9",
+    "svelte": "^3.37.0",
+    "svelte-preprocess": "^4.7.1",
     "tailwindcss": "^2.1.2",
     "tslib": "^2.0.0",
     "typescript": "^4.0.0",
-    "vite": "^2.2.3"
+    "vite": "^2.2.3",
+    "node-sass": "^5.0.0",
+    "sass": "^1.32.12"
   },
   "type": "module",
   "engines": {
     "node": ">= 12.17.0"
   },
   "dependencies": {
-    "@tailwindcss/typography": "^0.4.0",
-    "cookie": "^0.4.1",
     "globby": "^11.0.3",
     "snarkdown": "^2.0.0",
     "string-hash": "^1.1.3",
-    "uuid": "^8.3.2"
+    "@lukeed/uuid": "^2.0.0",
+    "cookie": "^0.4.1"
   }
 }
