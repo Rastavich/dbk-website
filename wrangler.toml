@@ -1,0 +1,12 @@
+name = "website"
+type = 'webpack'
+account_id = 'd355774a4bf1e667fe376dddd28f4cf0'
+route = ''
+zone_id = ''
+usage_model = ''
+workers_dev = true
+target_type = "webpack"
+
+[site]
+bucket = "./build"
+entry-point = "./workers-site"
