@@ -1,8 +1,10 @@
 export function post() {
   return {
     headers: {
-      "set-cookie":
+      "set-cookie": [
         "jwt=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT",
+        "user=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT",
+      ],
     },
     body: {
       ok: true,

@@ -7,7 +7,7 @@ export async function post(request) {
     password: request.body.password,
   });
 
-  console.log(body);
+  // console.log("BODY: ", body);
 
   return respond(body);
 }

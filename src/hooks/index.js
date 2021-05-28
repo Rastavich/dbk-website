@@ -1,20 +1,43 @@
-import * as cookie from "cookie";
+import cookie from "cookie";
 
-export async function getContext({ headers }) {
-  const cookies = cookie.parse(headers.cookie || "");
-  const jwt =
-    cookies.jwt && Buffer.from(cookies.jwt, "base64").toString("utf-8");
+export async function handle({ request, render }) {
+  const cookies = await cookie.parse(request.headers.cookie || "");
+  let user;
+  // console.log("Cookies :", cookies);
 
+  if (cookies.user) {
+    user = JSON.parse(cookies.user);
+  }
+
+  const jwt = cookies.jwt;
+  request.locals.user = user || "";
+  request.locals.jwt = jwt || "";
+
+  // console.log("Req local user :", request.locals.user);
+  if (request.query.has("_method")) {
+    request.method = request.query.get("_method").toUpperCase();
+  }
+
+  const response = await render(request);
+
+  // const user = JSON.parse( request.locals.jwt)
+  // console.log("Response: ", response);
   return {
-    user: jwt ? JSON.parse(jwt) : null,
+    ...response,
+    headers: {
+      ...response.headers,
+    },
   };
 }
 
-export function getSession({ context }) {
+export function getSession(request) {
+  // console.log("Request Session: ", request);
+
   return {
-    user: context.user && {
-      username: context.user.username,
-      email: context.user.email,
+    user: request.locals.user && {
+      username: request.locals.user?.username,
+      email: request.locals.user?.email,
     },
+    jwt: request.locals.jwt,
   };
 }

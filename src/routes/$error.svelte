@@ -1,39 +1,43 @@
-<script>
-  import { dev } from "$app/env";
-  import Layout from "./$layout.svelte";
-  export let error, status;
+<script context="module">
+  export const prerender = true;
+  export function load({ error, status }) {
+    return {
+      props: { error, status },
+    };
+  }
 </script>
 
-<svelte:head>
-  <title>{status}</title>
-</svelte:head>
+<script lang="ts">
+  import { dev } from "$app/env";
+  import Section from "$lib/components/section.svelte";
+  export let status: number;
+  export let error: Error;
+</script>
 
-<div class="col-md-9">
-  <h1>{status}</h1>
+<div class="error-page row">
+  <Section>
+    <img
+      src="/images/illustration-large.jpg"
+      alt="Digital Business Keys"
+    />
+    <h1>{status}</h1>
+    <p>Oh, no! Something went wrong on our side.</p>
 
-  <p>{error.message}</p>
+    {#if dev}
+      <p>{error.message}</p>
+    {/if}
 
-  {#if dev && error.stack}
-    <pre>{error.stack}</pre>
-  {/if}
+    <p>
+      <a href="/contact">Contact Us</a>
+    </p>
+    <p>
+      <a class="btn" href="/">Go Home</a>
+    </p>
+  </Section>
 </div>
 
-<style>
-  h1,
-  p {
-    margin: 0 auto;
-  }
-  h1 {
-    font-size: 2.8em;
-    font-weight: 700;
-    margin: 0 0 0.5em 0;
-  }
-  p {
-    margin: 1em auto;
-  }
-  @media (min-width: 480px) {
-    h1 {
-      font-size: 4em;
-    }
-  }
-</style>
+{#if dev && error.stack}
+  <article class="card">
+    <pre>{error.stack}</pre>
+  </article>
+{/if}

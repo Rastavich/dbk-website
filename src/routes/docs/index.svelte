@@ -1,5 +1,5 @@
 <script context="module">
-	export const prerender = true;
+	// export const prerender = true;
 
   import { GRAPHQL_URI } from "../../lib/config";
   import { GET_DOCS } from "../../lib/graphql/requests";

@@ -14,23 +14,23 @@
 
 <!-- component -->
 <nav
-  class="flex items-center justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left"
+  class="flex justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left"
 >
   <div class="flex items-center flex-no-shrink text-white mr-6">
     <span class="font-semibold text-xl tracking-tight text-gray-50"
       ><a href="/"
         ><img
-          class="w-72"
+          class="w-60 md:w-72 lg:w-72"
           src="logo_light.webp"
           alt="Digital Business Keys"
         /></a
       ></span
     >
   </div>
-  <div class="block lg:hidden z-50 py-4 lg:py-2">
+  <div class="block lg:hidden z-50 lg:py-2">
     <button
       on:click={toggleMenu}
-      class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"
+      class="flex px-3 my-3 md:my-5 lg:py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"
     >
       <svg
         class="h-3 w-3"

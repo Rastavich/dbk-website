@@ -5,7 +5,6 @@ export const GET_DOCS = `
       title
       Slug
       content
-      Description
     }
   }
 `;

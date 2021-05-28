@@ -2,7 +2,7 @@ import { dev } from "$app/env";
 
 let uri = "https://api.digitalbk.app";
 if (dev) {
-  uri = "http://192.168.20.7:1337";
+  uri = "http://172.23.75.163:1337";
 }
 
 export const BASE_LOGIN_URI = `${uri}/auth/local`;
