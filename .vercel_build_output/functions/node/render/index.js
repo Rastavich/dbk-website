@@ -1,27 +1,28 @@
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
+var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = {exports: {}}).exports, mod), mod.exports;
+  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
+  __markAsModule(target);
   for (var name in all)
-    __defProp(target, name, {get: all[name], enumerable: true});
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
     for (let key of __getOwnPropNames(module2))
       if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
+        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
   }
   return target;
 };
 var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: true} : {value: module2, enumerable: true})), module2);
+  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
 };
 
 // node_modules/.pnpm/cookie@0.4.1/node_modules/cookie/index.js
@@ -138,7 +139,7 @@ var require_cookie = __commonJS({
 // node_modules/.pnpm/snarkdown@2.0.0/node_modules/snarkdown/dist/snarkdown.js
 var require_snarkdown = __commonJS({
   "node_modules/.pnpm/snarkdown@2.0.0/node_modules/snarkdown/dist/snarkdown.js"(exports, module2) {
-    var e = {"": ["<em>", "</em>"], _: ["<strong>", "</strong>"], "*": ["<strong>", "</strong>"], "~": ["<s>", "</s>"], "\n": ["<br />"], " ": ["<br />"], "-": ["<hr />"]};
+    var e = { "": ["<em>", "</em>"], _: ["<strong>", "</strong>"], "*": ["<strong>", "</strong>"], "~": ["<s>", "</s>"], "\n": ["<br />"], " ": ["<br />"], "-": ["<hr />"] };
     function n(e2) {
       return e2.replace(RegExp("^" + (e2.match(/^(\t| )+/) || "")[0], "gm"), "");
     }
@@ -166,59 +167,56 @@ var require_snarkdown = __commonJS({
 });
 
 // .svelte-kit/vercel/entry.js
-__markAsModule(exports);
 __export(exports, {
   default: () => entry_default
 });
 
-// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.99_svelte@3.38.2+vite@2.2.3/node_modules/@sveltejs/kit/dist/http.js
+// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.120_svelte@3.38.3/node_modules/@sveltejs/kit/dist/node.js
 function getRawBody(req) {
   return new Promise((fulfil, reject) => {
     const h = req.headers;
     if (!h["content-type"]) {
-      fulfil(null);
-      return;
+      return fulfil(null);
     }
     req.on("error", reject);
     const length = Number(h["content-length"]);
-    let data;
-    if (!isNaN(length)) {
-      data = new Uint8Array(length);
-      let i = 0;
+    if (isNaN(length) && h["transfer-encoding"] == null) {
+      return fulfil(null);
+    }
+    let data = new Uint8Array(length || 0);
+    if (length > 0) {
+      let offset = 0;
       req.on("data", (chunk) => {
-        for (let j = 0; j < chunk.length; j += 1) {
-          data[i++] = chunk[j];
+        const new_len = offset + Buffer.byteLength(chunk);
+        if (new_len > length) {
+          return reject({
+            status: 413,
+            reason: 'Exceeded "Content-Length" limit'
+          });
         }
+        data.set(chunk, offset);
+        offset = new_len;
       });
     } else {
-      if (h["transfer-encoding"] === void 0) {
-        fulfil(null);
-        return;
-      }
-      data = new Uint8Array(0);
       req.on("data", (chunk) => {
         const new_data = new Uint8Array(data.length + chunk.length);
-        for (let i = 0; i < data.length; i += 1) {
-          new_data[i] = data[i];
-        }
-        for (let i = 0; i < chunk.length; i += 1) {
-          new_data[i + data.length] = chunk[i];
-        }
+        new_data.set(data, 0);
+        new_data.set(chunk, data.length);
         data = new_data;
       });
     }
     req.on("end", () => {
       const [type] = h["content-type"].split(/;\s*/);
       if (type === "application/octet-stream") {
-        fulfil(data.buffer);
+        return fulfil(data);
       }
-      const decoder = new TextDecoder(h["content-encoding"] || "utf-8");
-      fulfil(decoder.decode(data));
+      const encoding = h["content-encoding"] || "utf-8";
+      fulfil(new TextDecoder(encoding).decode(data));
     });
   });
 }
 
-// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.99_svelte@3.38.2+vite@2.2.3/node_modules/@sveltejs/kit/dist/install-fetch.js
+// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.120_svelte@3.38.3/node_modules/@sveltejs/kit/dist/install-fetch.js
 var import_http = __toModule(require("http"));
 var import_https = __toModule(require("https"));
 var import_zlib = __toModule(require("zlib"));
@@ -263,7 +261,7 @@ function dataUriToBuffer(uri2) {
   return buffer;
 }
 var src = dataUriToBuffer;
-var {Readable} = import_stream.default;
+var { Readable } = import_stream.default;
 var wm = new WeakMap();
 async function* read(parts) {
   for (const part of parts) {
@@ -275,7 +273,7 @@ async function* read(parts) {
   }
 }
 var Blob = class {
-  constructor(blobParts = [], options2 = {type: ""}) {
+  constructor(blobParts = [], options2 = {}) {
     let size = 0;
     const parts = blobParts.map((element) => {
       let buffer;
@@ -322,7 +320,7 @@ var Blob = class {
     return Readable.from(read(wm.get(this).parts));
   }
   slice(start = 0, end = this.size, type = "") {
-    const {size} = this;
+    const { size } = this;
     let relativeStart = start < 0 ? Math.max(size + start, 0) : Math.min(start, size);
     let relativeEnd = end < 0 ? Math.max(size + end, 0) : Math.min(end, size);
     const span = Math.max(relativeEnd - relativeStart, 0);
@@ -344,21 +342,21 @@ var Blob = class {
         }
       }
     }
-    const blob = new Blob([], {type});
-    Object.assign(wm.get(blob), {size: span, parts: blobParts});
+    const blob = new Blob([], { type: String(type).toLowerCase() });
+    Object.assign(wm.get(blob), { size: span, parts: blobParts });
     return blob;
   }
   get [Symbol.toStringTag]() {
     return "Blob";
   }
   static [Symbol.hasInstance](object) {
-    return typeof object === "object" && typeof object.stream === "function" && object.stream.length === 0 && typeof object.constructor === "function" && /^(Blob|File)$/.test(object[Symbol.toStringTag]);
+    return object && typeof object === "object" && typeof object.stream === "function" && object.stream.length === 0 && typeof object.constructor === "function" && /^(Blob|File)$/.test(object[Symbol.toStringTag]);
   }
 };
 Object.defineProperties(Blob.prototype, {
-  size: {enumerable: true},
-  type: {enumerable: true},
-  slice: {enumerable: true}
+  size: { enumerable: true },
+  type: { enumerable: true },
+  slice: { enumerable: true }
 });
 var fetchBlob = Blob;
 var FetchBaseError = class extends Error {
@@ -472,8 +470,8 @@ var Body = class {
     this.size = size;
     if (body instanceof import_stream.default) {
       body.on("error", (err) => {
-        const error2 = err instanceof FetchBaseError ? err : new FetchError(`Invalid response body while trying to fetch ${this.url}: ${err.message}`, "system", err);
-        this[INTERNALS$2].error = error2;
+        const error3 = err instanceof FetchBaseError ? err : new FetchError(`Invalid response body while trying to fetch ${this.url}: ${err.message}`, "system", err);
+        this[INTERNALS$2].error = error3;
       });
     }
   }
@@ -484,7 +482,7 @@ var Body = class {
     return this[INTERNALS$2].disturbed;
   }
   async arrayBuffer() {
-    const {buffer, byteOffset, byteLength} = await consumeBody(this);
+    const { buffer, byteOffset, byteLength } = await consumeBody(this);
     return buffer.slice(byteOffset, byteOffset + byteLength);
   }
   async blob() {
@@ -507,12 +505,12 @@ var Body = class {
   }
 };
 Object.defineProperties(Body.prototype, {
-  body: {enumerable: true},
-  bodyUsed: {enumerable: true},
-  arrayBuffer: {enumerable: true},
-  blob: {enumerable: true},
-  json: {enumerable: true},
-  text: {enumerable: true}
+  body: { enumerable: true },
+  bodyUsed: { enumerable: true },
+  arrayBuffer: { enumerable: true },
+  blob: { enumerable: true },
+  json: { enumerable: true },
+  text: { enumerable: true }
 });
 async function consumeBody(data) {
   if (data[INTERNALS$2].disturbed) {
@@ -522,7 +520,7 @@ async function consumeBody(data) {
   if (data[INTERNALS$2].error) {
     throw data[INTERNALS$2].error;
   }
-  let {body} = data;
+  let { body } = data;
   if (body === null) {
     return Buffer.alloc(0);
   }
@@ -547,11 +545,11 @@ async function consumeBody(data) {
       accumBytes += chunk.length;
       accum.push(chunk);
     }
-  } catch (error2) {
-    if (error2 instanceof FetchBaseError) {
-      throw error2;
+  } catch (error3) {
+    if (error3 instanceof FetchBaseError) {
+      throw error3;
     } else {
-      throw new FetchError(`Invalid response body while trying to fetch ${data.url}: ${error2.message}`, "system", error2);
+      throw new FetchError(`Invalid response body while trying to fetch ${data.url}: ${error3.message}`, "system", error3);
     }
   }
   if (body.readableEnded === true || body._readableState.ended === true) {
@@ -560,8 +558,8 @@ async function consumeBody(data) {
         return Buffer.from(accum.join(""));
       }
       return Buffer.concat(accum, accumBytes);
-    } catch (error2) {
-      throw new FetchError(`Could not create Buffer from response body for ${data.url}: ${error2.message}`, "system", error2);
+    } catch (error3) {
+      throw new FetchError(`Could not create Buffer from response body for ${data.url}: ${error3.message}`, "system", error3);
     }
   } else {
     throw new FetchError(`Premature close of server response while trying to fetch ${data.url}`);
@@ -570,13 +568,13 @@ async function consumeBody(data) {
 var clone = (instance, highWaterMark) => {
   let p1;
   let p2;
-  let {body} = instance;
+  let { body } = instance;
   if (instance.bodyUsed) {
     throw new Error("cannot clone body after it is used");
   }
   if (body instanceof import_stream.default && typeof body.getBoundary !== "function") {
-    p1 = new import_stream.PassThrough({highWaterMark});
-    p2 = new import_stream.PassThrough({highWaterMark});
+    p1 = new import_stream.PassThrough({ highWaterMark });
+    p2 = new import_stream.PassThrough({ highWaterMark });
     body.pipe(p1);
     body.pipe(p2);
     instance[INTERNALS$2].body = p1;
@@ -612,7 +610,7 @@ var extractContentType = (body, request) => {
   return "text/plain;charset=UTF-8";
 };
 var getTotalBytes = (request) => {
-  const {body} = request;
+  const { body } = request;
   if (body === null) {
     return 0;
   }
@@ -630,7 +628,7 @@ var getTotalBytes = (request) => {
   }
   return null;
 };
-var writeToStream = (dest, {body}) => {
+var writeToStream = (dest, { body }) => {
   if (body === null) {
     dest.end();
   } else if (isBlob(body)) {
@@ -645,14 +643,14 @@ var writeToStream = (dest, {body}) => {
 var validateHeaderName = typeof import_http.default.validateHeaderName === "function" ? import_http.default.validateHeaderName : (name) => {
   if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name)) {
     const err = new TypeError(`Header name must be a valid HTTP token [${name}]`);
-    Object.defineProperty(err, "code", {value: "ERR_INVALID_HTTP_TOKEN"});
+    Object.defineProperty(err, "code", { value: "ERR_INVALID_HTTP_TOKEN" });
     throw err;
   }
 };
 var validateHeaderValue = typeof import_http.default.validateHeaderValue === "function" ? import_http.default.validateHeaderValue : (name, value) => {
   if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
     const err = new TypeError(`Invalid character in header content ["${name}"]`);
-    Object.defineProperty(err, "code", {value: "ERR_INVALID_CHAR"});
+    Object.defineProperty(err, "code", { value: "ERR_INVALID_CHAR" });
     throw err;
   }
 };
@@ -777,7 +775,7 @@ var Headers = class extends URLSearchParams {
   }
 };
 Object.defineProperties(Headers.prototype, ["get", "entries", "forEach", "values"].reduce((result, property) => {
-  result[property] = {enumerable: true};
+  result[property] = { enumerable: true };
   return result;
 }, {}));
 function fromRawHeaders(headers = []) {
@@ -869,13 +867,13 @@ var Response2 = class extends Body {
   }
 };
 Object.defineProperties(Response2.prototype, {
-  url: {enumerable: true},
-  status: {enumerable: true},
-  ok: {enumerable: true},
-  redirected: {enumerable: true},
-  statusText: {enumerable: true},
-  headers: {enumerable: true},
-  clone: {enumerable: true}
+  url: { enumerable: true },
+  status: { enumerable: true },
+  ok: { enumerable: true },
+  redirected: { enumerable: true },
+  statusText: { enumerable: true },
+  headers: { enumerable: true },
+  clone: { enumerable: true }
 });
 var getSearch = (parsedURL) => {
   if (parsedURL.search) {
@@ -889,7 +887,7 @@ var INTERNALS = Symbol("Request internals");
 var isRequest = (object) => {
   return typeof object === "object" && typeof object[INTERNALS] === "object";
 };
-var Request = class extends Body {
+var Request2 = class extends Body {
   constructor(input, init2 = {}) {
     let parsedURL;
     if (isRequest(input)) {
@@ -951,22 +949,22 @@ var Request = class extends Body {
     return this[INTERNALS].signal;
   }
   clone() {
-    return new Request(this);
+    return new Request2(this);
   }
   get [Symbol.toStringTag]() {
     return "Request";
   }
 };
-Object.defineProperties(Request.prototype, {
-  method: {enumerable: true},
-  url: {enumerable: true},
-  headers: {enumerable: true},
-  redirect: {enumerable: true},
-  clone: {enumerable: true},
-  signal: {enumerable: true}
+Object.defineProperties(Request2.prototype, {
+  method: { enumerable: true },
+  url: { enumerable: true },
+  headers: { enumerable: true },
+  redirect: { enumerable: true },
+  clone: { enumerable: true },
+  signal: { enumerable: true }
 });
 var getNodeRequestOptions = (request) => {
-  const {parsedURL} = request[INTERNALS];
+  const { parsedURL } = request[INTERNALS];
   const headers = new Headers(request[INTERNALS].headers);
   if (!headers.has("Accept")) {
     headers.set("Accept", "*/*");
@@ -990,7 +988,7 @@ var getNodeRequestOptions = (request) => {
   if (request.compress && !headers.has("Accept-Encoding")) {
     headers.set("Accept-Encoding", "gzip,deflate,br");
   }
-  let {agent} = request;
+  let { agent } = request;
   if (typeof agent === "function") {
     agent = agent(parsedURL);
   }
@@ -1023,30 +1021,30 @@ var AbortError = class extends FetchBaseError {
 var supportedSchemas = new Set(["data:", "http:", "https:"]);
 async function fetch2(url, options_) {
   return new Promise((resolve2, reject) => {
-    const request = new Request(url, options_);
+    const request = new Request2(url, options_);
     const options2 = getNodeRequestOptions(request);
     if (!supportedSchemas.has(options2.protocol)) {
       throw new TypeError(`node-fetch cannot load ${url}. URL scheme "${options2.protocol.replace(/:$/, "")}" is not supported.`);
     }
     if (options2.protocol === "data:") {
       const data = src(request.url);
-      const response2 = new Response2(data, {headers: {"Content-Type": data.typeFull}});
+      const response2 = new Response2(data, { headers: { "Content-Type": data.typeFull } });
       resolve2(response2);
       return;
     }
     const send2 = (options2.protocol === "https:" ? import_https.default : import_http.default).request;
-    const {signal} = request;
+    const { signal } = request;
     let response = null;
     const abort = () => {
-      const error2 = new AbortError("The operation was aborted.");
-      reject(error2);
+      const error3 = new AbortError("The operation was aborted.");
+      reject(error3);
       if (request.body && request.body instanceof import_stream.default.Readable) {
-        request.body.destroy(error2);
+        request.body.destroy(error3);
       }
       if (!response || !response.body) {
         return;
       }
-      response.body.emit("error", error2);
+      response.body.emit("error", error3);
     };
     if (signal && signal.aborted) {
       abort();
@@ -1085,8 +1083,8 @@ async function fetch2(url, options_) {
             if (locationURL !== null) {
               try {
                 headers.set("Location", locationURL);
-              } catch (error2) {
-                reject(error2);
+              } catch (error3) {
+                reject(error3);
               }
             }
             break;
@@ -1120,7 +1118,7 @@ async function fetch2(url, options_) {
               requestOptions.body = void 0;
               requestOptions.headers.delete("content-length");
             }
-            resolve2(fetch2(new Request(locationURL, requestOptions)));
+            resolve2(fetch2(new Request2(locationURL, requestOptions)));
             finalize();
             return;
           }
@@ -1131,8 +1129,8 @@ async function fetch2(url, options_) {
           signal.removeEventListener("abort", abortAndFinalize);
         }
       });
-      let body = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error2) => {
-        reject(error2);
+      let body = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error3) => {
+        reject(error3);
       });
       if (process.version < "v12.10") {
         response_.on("aborted", abortAndFinalize);
@@ -1157,25 +1155,25 @@ async function fetch2(url, options_) {
         finishFlush: import_zlib.default.Z_SYNC_FLUSH
       };
       if (codings === "gzip" || codings === "x-gzip") {
-        body = (0, import_stream.pipeline)(body, import_zlib.default.createGunzip(zlibOptions), (error2) => {
-          reject(error2);
+        body = (0, import_stream.pipeline)(body, import_zlib.default.createGunzip(zlibOptions), (error3) => {
+          reject(error3);
         });
         response = new Response2(body, responseOptions);
         resolve2(response);
         return;
       }
       if (codings === "deflate" || codings === "x-deflate") {
-        const raw = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error2) => {
-          reject(error2);
+        const raw = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error3) => {
+          reject(error3);
         });
         raw.once("data", (chunk) => {
           if ((chunk[0] & 15) === 8) {
-            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflate(), (error2) => {
-              reject(error2);
+            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflate(), (error3) => {
+              reject(error3);
             });
           } else {
-            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflateRaw(), (error2) => {
-              reject(error2);
+            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflateRaw(), (error3) => {
+              reject(error3);
             });
           }
           response = new Response2(body, responseOptions);
@@ -1184,8 +1182,8 @@ async function fetch2(url, options_) {
         return;
       }
       if (codings === "br") {
-        body = (0, import_stream.pipeline)(body, import_zlib.default.createBrotliDecompress(), (error2) => {
-          reject(error2);
+        body = (0, import_stream.pipeline)(body, import_zlib.default.createBrotliDecompress(), (error3) => {
+          reject(error3);
         });
         response = new Response2(body, responseOptions);
         resolve2(response);
@@ -1197,12 +1195,26 @@ async function fetch2(url, options_) {
     writeToStream(request_, request);
   });
 }
-globalThis.fetch = fetch2;
-globalThis.Response = Response2;
-globalThis.Request = Request;
-globalThis.Headers = Headers;
+Object.defineProperties(globalThis, {
+  fetch: {
+    enumerable: true,
+    value: fetch2
+  },
+  Response: {
+    enumerable: true,
+    value: Response2
+  },
+  Request: {
+    enumerable: true,
+    value: Request2
+  },
+  Headers: {
+    enumerable: true,
+    value: Headers
+  }
+});
 
-// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.99_svelte@3.38.2+vite@2.2.3/node_modules/@sveltejs/kit/dist/ssr.js
+// node_modules/.pnpm/@sveltejs+kit@1.0.0-next.120_svelte@3.38.3/node_modules/@sveltejs/kit/dist/ssr.js
 var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$";
 var unsafeChars = /[<>\b\f\n\r\t\0\u2028\u2029]/g;
 var reserved = /^(?:do|if|in|for|int|let|new|try|var|byte|case|char|else|enum|goto|long|this|void|with|await|break|catch|class|const|final|float|short|super|throw|while|yield|delete|double|export|import|native|return|switch|throws|typeof|boolean|default|extends|finally|package|private|abstract|continue|debugger|function|volatile|interface|protected|transient|implements|instanceof|synchronized)$/;
@@ -1474,7 +1486,19 @@ function writable(value, start = noop) {
       }
     };
   }
-  return {set, update, subscribe: subscribe2};
+  return { set, update, subscribe: subscribe2 };
+}
+function hash(value) {
+  let hash2 = 5381;
+  let i = value.length;
+  if (typeof value === "string") {
+    while (i)
+      hash2 = hash2 * 33 ^ value.charCodeAt(--i);
+  } else {
+    while (i)
+      hash2 = hash2 * 33 ^ value[--i];
+  }
+  return (hash2 >>> 0).toString(36);
 }
 var s$1 = JSON.stringify;
 async function render_response({
@@ -1482,7 +1506,7 @@ async function render_response({
   $session,
   page_config,
   status,
-  error: error2,
+  error: error3,
   branch,
   page: page2
 }) {
@@ -1493,11 +1517,11 @@ async function render_response({
   let rendered;
   let is_private = false;
   let maxage;
-  if (error2) {
-    error2.stack = options2.get_stack(error2);
+  if (error3) {
+    error3.stack = options2.get_stack(error3);
   }
   if (branch) {
-    branch.forEach(({node, loaded, fetched, uses_credentials}) => {
+    branch.forEach(({ node, loaded, fetched, uses_credentials }) => {
       if (node.css)
         node.css.forEach((url) => css2.add(url));
       if (node.js)
@@ -1518,7 +1542,7 @@ async function render_response({
         session: session2
       },
       page: page2,
-      components: branch.map(({node}) => node.module.default)
+      components: branch.map(({ node }) => node.module.default)
     };
     for (let i = 0; i < branch.length; i += 1) {
       props[`props_${i}`] = await branch[i].loaded.props;
@@ -1535,12 +1559,12 @@ async function render_response({
       unsubscribe();
     }
   } else {
-    rendered = {head: "", html: "", css: ""};
+    rendered = { head: "", html: "", css: { code: "", map: null } };
   }
   const include_js = page_config.router || page_config.hydrate;
   if (!include_js)
     js.clear();
-  const links = options2.amp ? styles.size > 0 ? `<style amp-custom>${Array.from(styles).join("\n")}</style>` : "" : [
+  const links = options2.amp ? styles.size > 0 || rendered.css.code.length > 0 ? `<style amp-custom>${Array.from(styles).concat(rendered.css.code).join("\n")}</style>` : "" : [
     ...Array.from(js).map((dep) => `<link rel="modulepreload" href="${dep}">`),
     ...Array.from(css2).map((dep) => `<link rel="stylesheet" href="${dep}">`)
   ].join("\n		");
@@ -1549,24 +1573,25 @@ async function render_response({
     init2 = `
 		<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
 		<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-		<script async src="https://cdn.ampproject.org/v0.js"></script>`;
+		<script async src="https://cdn.ampproject.org/v0.js"><\/script>`;
   } else if (include_js) {
     init2 = `<script type="module">
 			import { start } from ${s$1(options2.entry.file)};
 			start({
 				target: ${options2.target ? `document.querySelector(${s$1(options2.target)})` : "document.body"},
 				paths: ${s$1(options2.paths)},
-				session: ${try_serialize($session, (error3) => {
-      throw new Error(`Failed to serialize session data: ${error3.message}`);
+				session: ${try_serialize($session, (error4) => {
+      throw new Error(`Failed to serialize session data: ${error4.message}`);
     })},
 				host: ${page2 && page2.host ? s$1(page2.host) : "location.host"},
 				route: ${!!page_config.router},
 				spa: ${!page_config.ssr},
+				trailing_slash: ${s$1(options2.trailing_slash)},
 				hydrate: ${page_config.ssr && page_config.hydrate ? `{
 					status: ${status},
-					error: ${serialize_error(error2)},
+					error: ${serialize_error(error3)},
 					nodes: [
-						${branch.map(({node}) => `import(${s$1(node.entry)})`).join(",\n						")}
+						${branch.map(({ node }) => `import(${s$1(node.entry)})`).join(",\n						")}
 					],
 					page: {
 						host: ${page2.host ? s$1(page2.host) : "location.host"}, // TODO this is redundant
@@ -1576,7 +1601,14 @@ async function render_response({
 					}
 				}` : "null"}
 			});
-		</script>`;
+		<\/script>`;
+  }
+  if (options2.service_worker) {
+    init2 += `<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('${options2.service_worker}');
+			}
+		<\/script>`;
   }
   const head = [
     rendered.head,
@@ -1586,7 +1618,12 @@ async function render_response({
   ].join("\n\n		");
   const body = options2.amp ? rendered.html : `${rendered.html}
 
-			${serialized_data.map(({url, json}) => `<script type="svelte-data" url="${url}">${json}</script>`).join("\n\n			")}
+			${serialized_data.map(({ url, body: body2, json }) => {
+    let attributes = `type="application/json" data-type="svelte-data" data-url="${url}"`;
+    if (body2)
+      attributes += ` data-body="${hash(body2)}"`;
+    return `<script ${attributes}>${json}<\/script>`;
+  }).join("\n\n			")}
 		`.replace(/^\t{2}/gm, "");
   const headers = {
     "content-type": "text/html"
@@ -1600,7 +1637,7 @@ async function render_response({
   return {
     status,
     headers,
-    body: options2.template({head, body})
+    body: options2.template({ head, body })
   };
 }
 function try_serialize(data, fail) {
@@ -1612,13 +1649,13 @@ function try_serialize(data, fail) {
     return null;
   }
 }
-function serialize_error(error2) {
-  if (!error2)
+function serialize_error(error3) {
+  if (!error3)
     return null;
-  let serialized = try_serialize(error2);
+  let serialized = try_serialize(error3);
   if (!serialized) {
-    const {name, message, stack} = error2;
-    serialized = try_serialize({name, message, stack});
+    const { name, message, stack } = error3;
+    serialized = try_serialize({ name, message, stack });
   }
   if (!serialized) {
     serialized = "{}";
@@ -1627,19 +1664,19 @@ function serialize_error(error2) {
 }
 function normalize(loaded) {
   if (loaded.error) {
-    const error2 = typeof loaded.error === "string" ? new Error(loaded.error) : loaded.error;
+    const error3 = typeof loaded.error === "string" ? new Error(loaded.error) : loaded.error;
     const status = loaded.status;
-    if (!(error2 instanceof Error)) {
+    if (!(error3 instanceof Error)) {
       return {
         status: 500,
-        error: new Error(`"error" property returned from load() must be a string or instance of Error, received type "${typeof error2}"`)
+        error: new Error(`"error" property returned from load() must be a string or instance of Error, received type "${typeof error3}"`)
       };
     }
     if (!status || status < 400 || status > 599) {
       console.warn('"error" returned from load() without a valid status code \u2014 defaulting to 500');
-      return {status: 500, error: error2};
+      return { status: 500, error: error3 };
     }
-    return {status, error: error2};
+    return { status, error: error3 };
   }
   if (loaded.redirect) {
     if (!loaded.status || Math.floor(loaded.status / 100) !== 3) {
@@ -1685,9 +1722,9 @@ async function load_node({
   is_leaf,
   is_error,
   status,
-  error: error2
+  error: error3
 }) {
-  const {module: module2} = node;
+  const { module: module2 } = node;
   let uses_credentials = false;
   const fetched = [];
   let loaded;
@@ -1725,7 +1762,8 @@ async function load_node({
         }
         let response;
         if (/^[a-zA-Z]+:/.test(url)) {
-          response = await fetch(url, opts);
+          const request2 = new Request(url, opts);
+          response = await options2.hooks.serverFetch.call(null, request2);
         } else {
           const [path, search] = url.split("?");
           const resolved = resolve(request.path, path);
@@ -1744,13 +1782,16 @@ async function load_node({
             }
           }
           if (!response) {
-            const headers = {...opts.headers};
+            const headers = { ...opts.headers };
             if (opts.credentials !== "omit") {
               uses_credentials = true;
               headers.cookie = request.headers.cookie;
               if (!headers.authorization) {
                 headers.authorization = request.headers.authorization;
               }
+            }
+            if (opts.body && typeof opts.body !== "string") {
+              throw new Error("Request body must be a string");
             }
             const rendered = await respond({
               host: request.host,
@@ -1784,10 +1825,13 @@ async function load_node({
                   if (key2 !== "etag" && key2 !== "set-cookie")
                     headers[key2] = value;
                 }
-                fetched.push({
-                  url,
-                  json: `{"status":${response2.status},"statusText":${s(response2.statusText)},"headers":${s(headers)},"body":${escape(body)}}`
-                });
+                if (!opts.body || typeof opts.body === "string") {
+                  fetched.push({
+                    url,
+                    body: opts.body,
+                    json: `{"status":${response2.status},"statusText":${s(response2.statusText)},"headers":${s(headers)},"body":${escape(body)}}`
+                  });
+                }
                 return body;
               }
               if (key === "text") {
@@ -1807,11 +1851,11 @@ async function load_node({
           status: 404
         });
       },
-      context: {...context}
+      context: { ...context }
     };
     if (is_error) {
       load_input.status = status;
-      load_input.error = error2;
+      load_input.error = error3;
     }
     loaded = await module2.load.call(null, load_input);
   } else {
@@ -1864,7 +1908,7 @@ function escape(str) {
   result += '"';
   return result;
 }
-async function respond_with_error({request, options: options2, state, $session, status, error: error2}) {
+async function respond_with_error({ request, options: options2, state, $session, status, error: error3 }) {
   const default_layout = await options2.load_component(options2.manifest.layout);
   const default_error = await options2.load_component(options2.manifest.error);
   const page2 = {
@@ -1899,7 +1943,7 @@ async function respond_with_error({request, options: options2, state, $session, 
       is_leaf: false,
       is_error: true,
       status,
-      error: error2
+      error: error3
     })
   ];
   try {
@@ -1912,20 +1956,20 @@ async function respond_with_error({request, options: options2, state, $session, 
         ssr: options2.ssr
       },
       status,
-      error: error2,
+      error: error3,
       branch,
       page: page2
     });
-  } catch (error3) {
-    options2.handle_error(error3);
+  } catch (error4) {
+    options2.handle_error(error4);
     return {
       status: 500,
       headers: {},
-      body: error3.stack
+      body: error4.stack
     };
   }
 }
-async function respond$1({request, options: options2, state, $session, route}) {
+async function respond$1({ request, options: options2, state, $session, route }) {
   const match = route.pattern.exec(request.path);
   const params = route.params(match);
   const page2 = {
@@ -1937,15 +1981,15 @@ async function respond$1({request, options: options2, state, $session, route}) {
   let nodes;
   try {
     nodes = await Promise.all(route.a.map((id) => id && options2.load_component(id)));
-  } catch (error3) {
-    options2.handle_error(error3);
+  } catch (error4) {
+    options2.handle_error(error4);
     return await respond_with_error({
       request,
       options: options2,
       state,
       $session,
       status: 500,
-      error: error3
+      error: error4
     });
   }
   const leaf = nodes[nodes.length - 1].module;
@@ -1963,7 +2007,7 @@ async function respond$1({request, options: options2, state, $session, route}) {
   }
   let branch;
   let status = 200;
-  let error2;
+  let error3;
   ssr:
     if (page_config.ssr) {
       let context = {};
@@ -1996,14 +2040,14 @@ async function respond$1({request, options: options2, state, $session, route}) {
               };
             }
             if (loaded.loaded.error) {
-              ({status, error: error2} = loaded.loaded);
+              ({ status, error: error3 } = loaded.loaded);
             }
           } catch (e) {
             options2.handle_error(e);
             status = 500;
-            error2 = e;
+            error3 = e;
           }
-          if (error2) {
+          if (error3) {
             while (i--) {
               if (route.b[i]) {
                 const error_node = await options2.load_component(route.b[i]);
@@ -2026,7 +2070,7 @@ async function respond$1({request, options: options2, state, $session, route}) {
                     is_leaf: false,
                     is_error: true,
                     status,
-                    error: error2
+                    error: error3
                   });
                   if (error_loaded.loaded.error) {
                     continue;
@@ -2045,7 +2089,7 @@ async function respond$1({request, options: options2, state, $session, route}) {
               state,
               $session,
               status,
-              error: error2
+              error: error3
             });
           }
         }
@@ -2064,19 +2108,19 @@ async function respond$1({request, options: options2, state, $session, route}) {
       $session,
       page_config,
       status,
-      error: error2,
+      error: error3,
       branch: branch && branch.filter(Boolean),
       page: page2
     });
-  } catch (error3) {
-    options2.handle_error(error3);
+  } catch (error4) {
+    options2.handle_error(error4);
     return await respond_with_error({
       request,
       options: options2,
       state,
       $session,
       status: 500,
-      error: error3
+      error: error4
     });
   }
 }
@@ -2125,29 +2169,41 @@ function lowercase_keys(obj) {
   }
   return clone2;
 }
+function error(body) {
+  return {
+    status: 500,
+    body,
+    headers: {}
+  };
+}
 async function render_route(request, route) {
   const mod = await route.load();
   const handler = mod[request.method.toLowerCase().replace("delete", "del")];
   if (handler) {
     const match = route.pattern.exec(request.path);
     const params = route.params(match);
-    const response = await handler({...request, params});
+    const response = await handler({ ...request, params });
     if (response) {
       if (typeof response !== "object") {
-        return {
-          status: 500,
-          body: `Invalid response from route ${request.path};
-						 expected an object, got ${typeof response}`,
-          headers: {}
-        };
+        return error(`Invalid response from route ${request.path}: expected an object, got ${typeof response}`);
       }
-      let {status = 200, body, headers = {}} = response;
+      let { status = 200, body, headers = {} } = response;
       headers = lowercase_keys(headers);
-      if (typeof body === "object" && (!("content-type" in headers) || headers["content-type"] === "application/json")) {
-        headers = {...headers, "content-type": "application/json"};
-        body = JSON.stringify(body);
+      const type = headers["content-type"];
+      if (type === "application/octet-stream" && !(body instanceof Uint8Array)) {
+        return error(`Invalid response from route ${request.path}: body must be an instance of Uint8Array if content type is application/octet-stream`);
       }
-      return {status, body, headers};
+      if (body instanceof Uint8Array && type !== "application/octet-stream") {
+        return error(`Invalid response from route ${request.path}: Uint8Array body must be accompanied by content-type: application/octet-stream header`);
+      }
+      let normalized_body;
+      if (typeof body === "object" && (!type || type === "application/json")) {
+        headers = { ...headers, "content-type": "application/json" };
+        normalized_body = JSON.stringify(body);
+      } else {
+        normalized_body = body;
+      }
+      return { status, body: normalized_body, headers };
     }
   }
 }
@@ -2208,11 +2264,10 @@ var ReadOnlyFormData = class {
     }
   }
 };
-function parse_body(req) {
-  const raw = req.rawBody;
+function parse_body(raw, headers) {
   if (!raw)
     return raw;
-  const [type, ...directives] = req.headers["content-type"].split(/;\s*/);
+  const [type, ...directives] = headers["content-type"].split(/;\s*/);
   if (typeof raw === "string") {
     switch (type) {
       case "text/plain":
@@ -2234,7 +2289,7 @@ function parse_body(req) {
   return raw;
 }
 function get_urlencoded(text) {
-  const {data, append} = read_only_form_data();
+  const { data, append } = read_only_form_data();
   text.replace(/\+/g, " ").split("&").forEach((str) => {
     const [key, value] = str.split("=");
     append(decodeURIComponent(key), decodeURIComponent(value));
@@ -2249,7 +2304,7 @@ function get_multipart(text, boundary) {
   if (parts[0] !== "" || parts[parts.length - 1].trim() !== "--") {
     nope();
   }
-  const {data, append} = read_only_form_data();
+  const { data, append } = read_only_form_data();
   parts.slice(1, -1).forEach((part) => {
     const match = /\s*([\s\S]+?)\r\n\r\n([\s\S]*)\s*/.exec(part);
     const raw_headers = match[1];
@@ -2282,30 +2337,35 @@ function get_multipart(text, boundary) {
   return data;
 }
 async function respond(incoming, options2, state = {}) {
-  if (incoming.path.endsWith("/") && incoming.path !== "/") {
-    const q = incoming.query.toString();
-    return {
-      status: 301,
-      headers: {
-        location: encodeURI(incoming.path.slice(0, -1) + (q ? `?${q}` : ""))
-      }
-    };
+  if (incoming.path !== "/" && options2.trailing_slash !== "ignore") {
+    const has_trailing_slash = incoming.path.endsWith("/");
+    if (has_trailing_slash && options2.trailing_slash === "never" || !has_trailing_slash && options2.trailing_slash === "always" && !incoming.path.split("/").pop().includes(".")) {
+      const path = has_trailing_slash ? incoming.path.slice(0, -1) : incoming.path + "/";
+      const q = incoming.query.toString();
+      return {
+        status: 301,
+        headers: {
+          location: encodeURI(path + (q ? `?${q}` : ""))
+        }
+      };
+    }
   }
   try {
+    const headers = lowercase_keys(incoming.headers);
     return await options2.hooks.handle({
       request: {
         ...incoming,
-        headers: lowercase_keys(incoming.headers),
-        body: parse_body(incoming),
+        headers,
+        body: parse_body(incoming.rawBody, headers),
         params: null,
         locals: {}
       },
-      render: async (request) => {
+      resolve: async (request) => {
         if (state.prerender && state.prerender.fallback) {
           return await render_response({
             options: options2,
             $session: await options2.hooks.getSession(request),
-            page_config: {ssr: false, router: true, hydrate: true},
+            page_config: { ssr: false, router: true, hydrate: true },
             status: 200,
             error: null,
             branch: [],
@@ -2345,14 +2405,8 @@ async function respond(incoming, options2, state = {}) {
     };
   }
 }
-function hash(str) {
-  let hash2 = 5381, i = str.length;
-  while (i)
-    hash2 = hash2 * 33 ^ str.charCodeAt(--i);
-  return (hash2 >>> 0).toString(36);
-}
 
-// node_modules/.pnpm/svelte@3.38.2/node_modules/svelte/internal/index.mjs
+// node_modules/.pnpm/svelte@3.38.3/node_modules/svelte/internal/index.mjs
 function noop2() {
 }
 function is_promise(value) {
@@ -2477,15 +2531,15 @@ function create_ssr_component(fn) {
       after_update: [],
       callbacks: blank_object()
     };
-    set_current_component({$$});
+    set_current_component({ $$ });
     const html = fn(result, props, bindings, slots);
     set_current_component(parent_component);
     return html;
   }
   return {
-    render: (props = {}, {$$slots = {}, context = new Map()} = {}) => {
+    render: (props = {}, { $$slots = {}, context = new Map() } = {}) => {
       on_destroy = [];
-      const result = {title: "", head: "", css: new Set()};
+      const result = { title: "", head: "", css: new Set() };
       const html = $$render(result, props, {}, $$slots, context);
       run_all(on_destroy);
       return {
@@ -2519,10 +2573,10 @@ if (typeof HTMLElement === "function") {
   SvelteElement = class extends HTMLElement {
     constructor() {
       super();
-      this.attachShadow({mode: "open"});
+      this.attachShadow({ mode: "open" });
     }
     connectedCallback() {
-      const {on_mount} = this.$$;
+      const { on_mount } = this.$$;
       this.$$.on_disconnect = on_mount.map(run).filter(is_function);
       for (const key in this.$$.slotted) {
         this.appendChild(this.$$.slotted[key]);
@@ -2560,17 +2614,17 @@ if (typeof HTMLElement === "function") {
 // .svelte-kit/output/server/app.js
 var import_cookie = __toModule(require_cookie());
 var import_snarkdown = __toModule(require_snarkdown());
-var css$4 = {
+var css$6 = {
   code: "#svelte-announcer.svelte-1y31lbn{position:absolute;left:0;top:0;clip:rect(0 0 0 0);-webkit-clip-path:inset(50%);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}",
-  map: `{"version":3,"file":"root.svelte","sources":["root.svelte"],"sourcesContent":["<!-- This file is generated by @sveltejs/kit \u2014 do not edit it! -->\\n<script>\\n\\timport { setContext, afterUpdate, onMount } from 'svelte';\\n\\n\\t// stores\\n\\texport let stores;\\n\\texport let page;\\n\\n\\texport let components;\\n\\texport let props_0 = null;\\n\\texport let props_1 = null;\\n\\texport let props_2 = null;\\n\\n\\tsetContext('__svelte__', stores);\\n\\n\\t$: stores.page.set(page);\\n\\tafterUpdate(stores.page.notify);\\n\\n\\tlet mounted = false;\\n\\tlet navigated = false;\\n\\tlet title = null;\\n\\n\\tonMount(() => {\\n\\t\\tconst unsubscribe = stores.page.subscribe(() => {\\n\\t\\t\\tif (mounted) {\\n\\t\\t\\t\\tnavigated = true;\\n\\t\\t\\t\\ttitle = document.title || 'untitled page';\\n\\t\\t\\t}\\n\\t\\t});\\n\\n\\t\\tmounted = true;\\n\\t\\treturn unsubscribe;\\n\\t});\\n</script>\\n\\n<svelte:component this={components[0]} {...(props_0 || {})}>\\n\\t{#if components[1]}\\n\\t\\t<svelte:component this={components[1]} {...(props_1 || {})}>\\n\\t\\t\\t{#if components[2]}\\n\\t\\t\\t\\t<svelte:component this={components[2]} {...(props_2 || {})}/>\\n\\t\\t\\t{/if}\\n\\t\\t</svelte:component>\\n\\t{/if}\\n</svelte:component>\\n\\n{#if mounted}\\n\\t<div id=\\"svelte-announcer\\" aria-live=\\"assertive\\" aria-atomic=\\"true\\">\\n\\t\\t{#if navigated}\\n\\t\\t\\t{title}\\n\\t\\t{/if}\\n\\t</div>\\n{/if}\\n\\n<style>#svelte-announcer{position:absolute;left:0;top:0;clip:rect(0 0 0 0);-webkit-clip-path:inset(50%);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}</style>"],"names":[],"mappings":"AAqDO,gCAAiB,CAAC,SAAS,QAAQ,CAAC,KAAK,CAAC,CAAC,IAAI,CAAC,CAAC,KAAK,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,kBAAkB,MAAM,GAAG,CAAC,CAAC,UAAU,MAAM,GAAG,CAAC,CAAC,SAAS,MAAM,CAAC,YAAY,MAAM,CAAC,MAAM,GAAG,CAAC,OAAO,GAAG,CAAC"}`
+  map: `{"version":3,"file":"root.svelte","sources":["root.svelte"],"sourcesContent":["<!-- This file is generated by @sveltejs/kit \u2014 do not edit it! -->\\n<script>\\n\\timport { setContext, afterUpdate, onMount } from 'svelte';\\n\\n\\t// stores\\n\\texport let stores;\\n\\texport let page;\\n\\n\\texport let components;\\n\\texport let props_0 = null;\\n\\texport let props_1 = null;\\n\\texport let props_2 = null;\\n\\n\\tsetContext('__svelte__', stores);\\n\\n\\t$: stores.page.set(page);\\n\\tafterUpdate(stores.page.notify);\\n\\n\\tlet mounted = false;\\n\\tlet navigated = false;\\n\\tlet title = null;\\n\\n\\tonMount(() => {\\n\\t\\tconst unsubscribe = stores.page.subscribe(() => {\\n\\t\\t\\tif (mounted) {\\n\\t\\t\\t\\tnavigated = true;\\n\\t\\t\\t\\ttitle = document.title || 'untitled page';\\n\\t\\t\\t}\\n\\t\\t});\\n\\n\\t\\tmounted = true;\\n\\t\\treturn unsubscribe;\\n\\t});\\n<\/script>\\n\\n<svelte:component this={components[0]} {...(props_0 || {})}>\\n\\t{#if components[1]}\\n\\t\\t<svelte:component this={components[1]} {...(props_1 || {})}>\\n\\t\\t\\t{#if components[2]}\\n\\t\\t\\t\\t<svelte:component this={components[2]} {...(props_2 || {})}/>\\n\\t\\t\\t{/if}\\n\\t\\t</svelte:component>\\n\\t{/if}\\n</svelte:component>\\n\\n{#if mounted}\\n\\t<div id=\\"svelte-announcer\\" aria-live=\\"assertive\\" aria-atomic=\\"true\\">\\n\\t\\t{#if navigated}\\n\\t\\t\\t{title}\\n\\t\\t{/if}\\n\\t</div>\\n{/if}\\n\\n<style>#svelte-announcer{position:absolute;left:0;top:0;clip:rect(0 0 0 0);-webkit-clip-path:inset(50%);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}</style>"],"names":[],"mappings":"AAqDO,gCAAiB,CAAC,SAAS,QAAQ,CAAC,KAAK,CAAC,CAAC,IAAI,CAAC,CAAC,KAAK,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,kBAAkB,MAAM,GAAG,CAAC,CAAC,UAAU,MAAM,GAAG,CAAC,CAAC,SAAS,MAAM,CAAC,YAAY,MAAM,CAAC,MAAM,GAAG,CAAC,OAAO,GAAG,CAAC"}`
 };
 var Root = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {stores} = $$props;
-  let {page: page2} = $$props;
-  let {components} = $$props;
-  let {props_0 = null} = $$props;
-  let {props_1 = null} = $$props;
-  let {props_2 = null} = $$props;
+  let { stores } = $$props;
+  let { page: page2 } = $$props;
+  let { components } = $$props;
+  let { props_0 = null } = $$props;
+  let { props_1 = null } = $$props;
+  let { props_2 = null } = $$props;
   setContext("__svelte__", stores);
   afterUpdate(stores.page.notify);
   let mounted = false;
@@ -2598,7 +2652,7 @@ var Root = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.props_1(props_1);
   if ($$props.props_2 === void 0 && $$bindings.props_2 && props_2 !== void 0)
     $$bindings.props_2(props_2);
-  $$result.css.add(css$4);
+  $$result.css.add(css$6);
   {
     stores.page.set(page2);
   }
@@ -2617,7 +2671,7 @@ function set_paths(paths) {
 }
 function set_prerendering(value) {
 }
-async function handle({request, render: render2}) {
+async function handle({ request, resolve: resolve2 }) {
   const cookies = await import_cookie.default.parse(request.headers.cookie || "");
   let user;
   if (cookies.user) {
@@ -2629,7 +2683,7 @@ async function handle({request, render: render2}) {
   if (request.query.has("_method")) {
     request.method = request.query.get("_method").toUpperCase();
   }
-  const response = await render2(request);
+  const response = await resolve2(request);
   return {
     ...response,
     headers: {
@@ -2653,26 +2707,27 @@ var user_hooks = /* @__PURE__ */ Object.freeze({
   handle,
   getSession
 });
-var template = ({head, body}) => '<!DOCTYPE html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="/favicon.ico" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body>\n		<div id="svelte">' + body + "</div>\n	</body>\n</html>\n";
+var template = ({ head, body }) => '<!DOCTYPE html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="/favicon.ico" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body>\n		<div id="svelte">' + body + "</div>\n	</body>\n</html>\n";
 var options = null;
-function init(settings) {
+var default_settings = { paths: { "base": "", "assets": "/." } };
+function init(settings = default_settings) {
   set_paths(settings.paths);
   set_prerendering(settings.prerendering || false);
   options = {
     amp: false,
     dev: false,
     entry: {
-      file: "/./_app/start-c202baf7.js",
+      file: "/./_app/start-062d5536.js",
       css: ["/./_app/assets/start-b97461fb.css"],
-      js: ["/./_app/start-c202baf7.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/singletons-bb9012b7.js"]
+      js: ["/./_app/start-062d5536.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/singletons-bb9012b7.js"]
     },
     fetched: void 0,
     floc: false,
     get_component_path: (id) => "/./_app/" + entry_lookup[id],
-    get_stack: (error2) => String(error2),
-    handle_error: (error2) => {
-      console.error(error2.stack);
-      error2.stack = options.get_stack(error2);
+    get_stack: (error22) => String(error22),
+    handle_error: (error22) => {
+      console.error(error22.stack);
+      error22.stack = options.get_stack(error22);
     },
     hooks: get_hooks(user_hooks),
     hydrate: true,
@@ -2682,102 +2737,104 @@ function init(settings) {
     paths: settings.paths,
     read: settings.read,
     root: Root,
+    service_worker: "/service-worker.js",
     router: true,
     ssr: true,
     target: "#svelte",
-    template
+    template,
+    trailing_slash: "never"
   };
 }
 var d = decodeURIComponent;
 var empty = () => ({});
 var manifest = {
-  assets: [{file: "favicon.ico", size: 1150, type: "image/vnd.microsoft.icon"}, {file: "images/app-image.webp", size: 74688, type: "image/webp"}, {file: "images/feature-image2.webp", size: 65954, type: "image/webp"}, {file: "logo-192.png", size: 4760, type: "image/png"}, {file: "logo-512.png", size: 13928, type: "image/png"}, {file: "logo.webp", size: 7916, type: "image/webp"}, {file: "logo_light.webp", size: 5204, type: "image/webp"}, {file: "robots.txt", size: 103, type: "text/plain"}],
-  layout: ".svelte-kit/build/components/layout.svelte",
-  error: ".svelte-kit/build/components/error.svelte",
+  assets: [{ "file": "favicon.ico", "size": 1150, "type": "image/vnd.microsoft.icon" }, { "file": "images/app-image.webp", "size": 74688, "type": "image/webp" }, { "file": "images/feature-image2.webp", "size": 65954, "type": "image/webp" }, { "file": "logo-192.png", "size": 4760, "type": "image/png" }, { "file": "logo-512.png", "size": 13928, "type": "image/png" }, { "file": "logo.webp", "size": 7916, "type": "image/webp" }, { "file": "logo_light.webp", "size": 5204, "type": "image/webp" }, { "file": "manifest.json", "size": 1070, "type": "application/json" }, { "file": "robots.txt", "size": 103, "type": "text/plain" }],
+  layout: "src/routes/__layout.svelte",
+  error: "src/routes/__error.svelte",
   routes: [
     {
       type: "page",
       pattern: /^\/$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/terms-of-service\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/terms-of-service/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/terms-of-service/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/privacy-policy\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/privacy-policy/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/privacy-policy/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/changelog\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/changelog/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/changelog/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/dashboard\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/dashboard/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/dashboard/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/features\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/features/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/features/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/contact\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/contact/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/contact/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/pricing\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/pricing/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/pricing/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/logout\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/logout/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/logout/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/signup\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/signup/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/signup/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/about\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/about/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/about/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/login\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/login/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/login/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "endpoint",
@@ -2799,35 +2856,36 @@ var manifest = {
       type: "page",
       pattern: /^\/blog\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/blog/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/blog/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/docs\/?$/,
       params: empty,
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/docs/index.svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      a: ["src/routes/__layout.svelte", "src/routes/docs/index.svelte"],
+      b: ["src/routes/__error.svelte"]
     },
     {
       type: "page",
       pattern: /^\/docs\/([^/]+?)\/?$/,
-      params: (m) => ({slug: d(m[1])}),
-      a: [".svelte-kit/build/components/layout.svelte", "src/routes/docs/[slug].svelte"],
-      b: [".svelte-kit/build/components/error.svelte"]
+      params: (m) => ({ slug: d(m[1]) }),
+      a: ["src/routes/__layout.svelte", "src/routes/docs/[slug].svelte"],
+      b: ["src/routes/__error.svelte"]
     }
   ]
 };
 var get_hooks = (hooks) => ({
   getSession: hooks.getSession || (() => ({})),
-  handle: hooks.handle || (({request, render: render2}) => render2(request))
+  handle: hooks.handle || (({ request, resolve: resolve2 }) => resolve2(request)),
+  serverFetch: hooks.serverFetch || fetch
 });
 var module_lookup = {
-  ".svelte-kit/build/components/layout.svelte": () => Promise.resolve().then(function() {
-    return layout;
+  "src/routes/__layout.svelte": () => Promise.resolve().then(function() {
+    return __layout;
   }),
-  ".svelte-kit/build/components/error.svelte": () => Promise.resolve().then(function() {
-    return error$1;
+  "src/routes/__error.svelte": () => Promise.resolve().then(function() {
+    return __error;
   }),
   "src/routes/index.svelte": () => Promise.resolve().then(function() {
     return index$d;
@@ -2875,19 +2933,18 @@ var module_lookup = {
     return _slug_;
   })
 };
-var metadata_lookup = {".svelte-kit/build/components/layout.svelte": {entry: "/./_app/layout.svelte-bbff28ea.js", css: [], js: ["/./_app/layout.svelte-bbff28ea.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, ".svelte-kit/build/components/error.svelte": {entry: "/./_app/error.svelte-16177405.js", css: [], js: ["/./_app/error.svelte-16177405.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/index.svelte": {entry: "/./_app/pages/index.svelte-597589cb.js", css: ["/./_app/assets/pages/index.svelte-d869b5b8.css"], js: ["/./_app/pages/index.svelte-597589cb.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/signup-defe407e.js", "/./_app/chunks/button-ef9af4cd.js", "/./_app/chunks/open-graph-7f49030a.js", "/./_app/chunks/stores-6f51bb6a.js"], styles: null}, "src/routes/terms-of-service/index.svelte": {entry: "/./_app/pages/terms-of-service/index.svelte-6d38f694.js", css: [], js: ["/./_app/pages/terms-of-service/index.svelte-6d38f694.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/privacy-policy/index.svelte": {entry: "/./_app/pages/privacy-policy/index.svelte-550d1c1a.js", css: ["/./_app/assets/pages/privacy-policy/index.svelte-52f8d936.css"], js: ["/./_app/pages/privacy-policy/index.svelte-550d1c1a.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/changelog/index.svelte": {entry: "/./_app/pages/changelog/index.svelte-d266fcb0.js", css: [], js: ["/./_app/pages/changelog/index.svelte-d266fcb0.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/dashboard/index.svelte": {entry: "/./_app/pages/dashboard/index.svelte-d7fc8af9.js", css: [], js: ["/./_app/pages/dashboard/index.svelte-d7fc8af9.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/features/index.svelte": {entry: "/./_app/pages/features/index.svelte-84102d6d.js", css: [], js: ["/./_app/pages/features/index.svelte-84102d6d.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/contact/index.svelte": {entry: "/./_app/pages/contact/index.svelte-bfefe85f.js", css: [], js: ["/./_app/pages/contact/index.svelte-bfefe85f.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/button-ef9af4cd.js"], styles: null}, "src/routes/pricing/index.svelte": {entry: "/./_app/pages/pricing/index.svelte-7b213046.js", css: [], js: ["/./_app/pages/pricing/index.svelte-7b213046.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/logout/index.svelte": {entry: "/./_app/pages/logout/index.svelte-14e390a3.js", css: [], js: ["/./_app/pages/logout/index.svelte-14e390a3.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/stores-6f51bb6a.js", "/./_app/chunks/utils-cf215c6e.js"], styles: null}, "src/routes/signup/index.svelte": {entry: "/./_app/pages/signup/index.svelte-af1dcddf.js", css: [], js: ["/./_app/pages/signup/index.svelte-af1dcddf.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/signup-defe407e.js"], styles: null}, "src/routes/about/index.svelte": {entry: "/./_app/pages/about/index.svelte-b65e663c.js", css: ["/./_app/assets/pages/about/index.svelte-59987484.css"], js: ["/./_app/pages/about/index.svelte-b65e663c.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/login/index.svelte": {entry: "/./_app/pages/login/index.svelte-185a929f.js", css: [], js: ["/./_app/pages/login/index.svelte-185a929f.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/stores-6f51bb6a.js", "/./_app/chunks/singletons-bb9012b7.js", "/./_app/chunks/utils-cf215c6e.js"], styles: null}, "src/routes/blog/index.svelte": {entry: "/./_app/pages/blog/index.svelte-5f4db70e.js", css: [], js: ["/./_app/pages/blog/index.svelte-5f4db70e.js", "/./_app/chunks/vendor-bed64379.js"], styles: null}, "src/routes/docs/index.svelte": {entry: "/./_app/pages/docs/index.svelte-e6190d77.js", css: ["/./_app/assets/pages/docs/index.svelte-c3821242.css"], js: ["/./_app/pages/docs/index.svelte-e6190d77.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/index-8fc7aa11.js", "/./_app/chunks/open-graph-7f49030a.js", "/./_app/chunks/stores-6f51bb6a.js"], styles: null}, "src/routes/docs/[slug].svelte": {entry: "/./_app/pages/docs/[slug].svelte-977f2753.js", css: [], js: ["/./_app/pages/docs/[slug].svelte-977f2753.js", "/./_app/chunks/vendor-bed64379.js", "/./_app/chunks/index-8fc7aa11.js", "/./_app/chunks/open-graph-7f49030a.js", "/./_app/chunks/stores-6f51bb6a.js"], styles: null}};
+var metadata_lookup = { "src/routes/__layout.svelte": { "entry": "/./_app/pages/__layout.svelte-342e8e17.js", "css": ["/./_app/assets/pages/__layout.svelte-72de0231.css"], "js": ["/./_app/pages/__layout.svelte-342e8e17.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/stores-ecd6cb1b.js", "/./_app/chunks/button-ff288475.js"], "styles": null }, "src/routes/__error.svelte": { "entry": "/./_app/pages/__error.svelte-d0047cf6.js", "css": ["/./_app/assets/pages/__error.svelte-c7a15572.css"], "js": ["/./_app/pages/__error.svelte-d0047cf6.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/index.svelte": { "entry": "/./_app/pages/index.svelte-d6cc44c4.js", "css": ["/./_app/assets/pages/index.svelte-d869b5b8.css"], "js": ["/./_app/pages/index.svelte-d6cc44c4.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/signup-61a92987.js", "/./_app/chunks/button-ff288475.js", "/./_app/chunks/open-graph-e512d3a6.js", "/./_app/chunks/stores-ecd6cb1b.js"], "styles": null }, "src/routes/terms-of-service/index.svelte": { "entry": "/./_app/pages/terms-of-service/index.svelte-3bbc6038.js", "css": [], "js": ["/./_app/pages/terms-of-service/index.svelte-3bbc6038.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/privacy-policy/index.svelte": { "entry": "/./_app/pages/privacy-policy/index.svelte-e82df043.js", "css": ["/./_app/assets/pages/privacy-policy/index.svelte-52f8d936.css"], "js": ["/./_app/pages/privacy-policy/index.svelte-e82df043.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/changelog/index.svelte": { "entry": "/./_app/pages/changelog/index.svelte-26af2134.js", "css": [], "js": ["/./_app/pages/changelog/index.svelte-26af2134.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/dashboard/index.svelte": { "entry": "/./_app/pages/dashboard/index.svelte-79d977d9.js", "css": [], "js": ["/./_app/pages/dashboard/index.svelte-79d977d9.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/features/index.svelte": { "entry": "/./_app/pages/features/index.svelte-4cf9e859.js", "css": [], "js": ["/./_app/pages/features/index.svelte-4cf9e859.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/contact/index.svelte": { "entry": "/./_app/pages/contact/index.svelte-822460f8.js", "css": [], "js": ["/./_app/pages/contact/index.svelte-822460f8.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/button-ff288475.js"], "styles": null }, "src/routes/pricing/index.svelte": { "entry": "/./_app/pages/pricing/index.svelte-592b6c33.js", "css": [], "js": ["/./_app/pages/pricing/index.svelte-592b6c33.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/logout/index.svelte": { "entry": "/./_app/pages/logout/index.svelte-9e4c244d.js", "css": [], "js": ["/./_app/pages/logout/index.svelte-9e4c244d.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/stores-ecd6cb1b.js", "/./_app/chunks/utils-cf215c6e.js"], "styles": null }, "src/routes/signup/index.svelte": { "entry": "/./_app/pages/signup/index.svelte-30154832.js", "css": [], "js": ["/./_app/pages/signup/index.svelte-30154832.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/signup-61a92987.js"], "styles": null }, "src/routes/about/index.svelte": { "entry": "/./_app/pages/about/index.svelte-8a07128e.js", "css": ["/./_app/assets/pages/about/index.svelte-59987484.css"], "js": ["/./_app/pages/about/index.svelte-8a07128e.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/login/index.svelte": { "entry": "/./_app/pages/login/index.svelte-e38d2840.js", "css": [], "js": ["/./_app/pages/login/index.svelte-e38d2840.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/stores-ecd6cb1b.js", "/./_app/chunks/singletons-bb9012b7.js", "/./_app/chunks/utils-cf215c6e.js"], "styles": null }, "src/routes/blog/index.svelte": { "entry": "/./_app/pages/blog/index.svelte-ef92ca59.js", "css": [], "js": ["/./_app/pages/blog/index.svelte-ef92ca59.js", "/./_app/chunks/vendor-53ff72c6.js"], "styles": null }, "src/routes/docs/index.svelte": { "entry": "/./_app/pages/docs/index.svelte-c8b2e020.js", "css": ["/./_app/assets/pages/docs/index.svelte-c3821242.css"], "js": ["/./_app/pages/docs/index.svelte-c8b2e020.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/index-8fc7aa11.js", "/./_app/chunks/open-graph-e512d3a6.js", "/./_app/chunks/stores-ecd6cb1b.js"], "styles": null }, "src/routes/docs/[slug].svelte": { "entry": "/./_app/pages/docs/[slug].svelte-6c10727d.js", "css": [], "js": ["/./_app/pages/docs/[slug].svelte-6c10727d.js", "/./_app/chunks/vendor-53ff72c6.js", "/./_app/chunks/index-8fc7aa11.js", "/./_app/chunks/open-graph-e512d3a6.js", "/./_app/chunks/stores-ecd6cb1b.js"], "styles": null } };
 async function load_component(file) {
   return {
     module: await module_lookup[file](),
     ...metadata_lookup[file]
   };
 }
-init({paths: {base: "", assets: "/."}});
 function render(request, {
   prerender: prerender2
 } = {}) {
   const host = request.headers["host"];
-  return respond({...request, host}, options, {prerender: prerender2});
+  return respond({ ...request, host }, options, { prerender: prerender2 });
 }
 function post$3() {
   return {
@@ -2909,7 +2966,7 @@ var logout = /* @__PURE__ */ Object.freeze({
 });
 function respond2(body) {
   if (body.errors) {
-    return {status: 401, body};
+    return { status: 401, body };
   }
   const user = JSON.stringify(body.user);
   const jwt = body.jwt;
@@ -2927,8 +2984,8 @@ var uri = "https://api.digitalbk.app";
 var BASE_LOGIN_URI = `${uri}/auth/local`;
 var GRAPHQL_URI = `${uri}/graphql`;
 var base = BASE_LOGIN_URI;
-async function send({method, data, token}) {
-  const opts = {method, headers: {}};
+async function send({ method, data, token }) {
+  const opts = { method, headers: {} };
   if (data) {
     opts.headers["Content-Type"] = "application/json";
     opts.body = JSON.stringify(data);
@@ -2945,7 +3002,7 @@ async function send({method, data, token}) {
   });
 }
 function post$2(data, token) {
-  return send({method: "POST", data, token});
+  return send({ method: "POST", data, token });
 }
 async function post$1(request) {
   const body = await post$2({
@@ -2959,35 +3016,191 @@ var login = /* @__PURE__ */ Object.freeze({
   [Symbol.toStringTag]: "Module",
   post: post$1
 });
-var Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${slots.default ? slots.default({}) : ``}`;
+var Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let date = new Date().getFullYear();
+  return `<footer class="${"text-gray-300 body-font hover:text-indigo-500"}"><div class="${"container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col"}"><div class="${"flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center"}"><div class="${"lg:w-1/4 md:w-1/2 w-full px-4"}"><h2 class="${"title-font font-medium tracking-widest text-sm mb-3"}">Resources
+        </h2>
+        <nav class="${"list-none mb-10"}"><li><a href="${"/docs"}">Documentation</a></li>
+          <li><a href="${"/blog"}">Blog</a></li>
+          <li><a href="${"/changelog"}">Changelog</a></li>
+          <li><a href="${"/support"}">Support</a></li></nav></div>
+      <div class="${"lg:w-1/4 md:w-1/2 w-full px-4"}"><h2 class="${"title-font font-medium tracking-widest text-sm mb-3"}">Features
+        </h2>
+        <nav class="${"list-none mb-10"}"><li><a href="${"/features#data-storage"}">Data Storage</a></li>
+          <li><a href="${"/features#asset-monitoring"}">Asset Monitoring</a></li>
+          <li><a href="${"/features#mobile-app"}">Mobile App</a></li>
+          <li><a href="${"/features#auto-notifications"}">Automatic Notifications</a></li>
+          <li><a href="${"/features"}">More Features</a></li></nav></div>
+      <div class="${"lg:w-1/4 md:w-1/2 w-full px-4"}"><h2 class="${"title-font font-medium tracking-widest text-sm mb-3"}">Company
+        </h2>
+        <nav class="${"list-none mb-10"}"><li><a href="${"/"}">Home</a></li>
+          <li><a href="${"/contact"}">Contact Us</a></li>
+
+          <li><a href="${"/about"}">About</a></li>
+          <li><a href="${"/pricing"}">Pricing</a></li></nav></div>
+      <div class="${"lg:w-1/4 md:w-1/2 w-full px-4"}"><h2 class="${"title-font font-medium tracking-widest text-sm mb-3"}">Legal
+        </h2>
+        <nav class="${"list-none mb-10"}"><li><a href="${"/privacy-policy"}">Privacy Policy</a></li>
+          <li><a href="${"/terms-of-service"}">Terms of Service</a></li></nav></div></div></div>
+  <div class="${"bg-gray-100 text-gray-700"}"><div class="${"container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row"}"><p class="${"text-sm text-center sm:text-left"}">\xA9
+        ${escape2(date)}
+        Digital Business Keys
+      </p>
+      <span class="${"inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start"}"><a href="${"https://facebook.com"}"><svg fill="${"black"}" stroke-linecap="${"round"}" stroke-linejoin="${"round"}" stroke-width="${"2"}" class="${"w-5 h-5"}" viewBox="${"0 0 24 24"}"><path d="${"M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"}"></path></svg></a>
+        <a href="${"https://twitter.com"}" class="${"ml-3"}"><svg fill="${"black"}" stroke-linecap="${"round"}" stroke-linejoin="${"round"}" stroke-width="${"2"}" class="${"w-5 h-5"}" viewBox="${"0 0 24 24"}"><path d="${"M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"}"></path></svg></a>
+        <a href="${"https://linkedin.com"}" class="${"ml-3"}"><svg fill="${"black"}" stroke="${"currentColor"}" stroke-linecap="${"round"}" stroke-linejoin="${"round"}" stroke-width="${"0"}" class="${"w-5 h-5"}" viewBox="${"0 0 24 24"}"><path stroke="${"none"}" d="${"M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"}"></path><circle cx="${"4"}" cy="${"4"}" r="${"2"}" stroke="${"none"}"></circle></svg></a></span></div></div></footer>`;
 });
-var layout = /* @__PURE__ */ Object.freeze({
+var ssr = typeof window === "undefined";
+var getStores = () => {
+  const stores = getContext("__svelte__");
+  return {
+    page: {
+      subscribe: stores.page.subscribe
+    },
+    navigating: {
+      subscribe: stores.navigating.subscribe
+    },
+    get preloading() {
+      console.error("stores.preloading is deprecated; use stores.navigating instead");
+      return {
+        subscribe: stores.navigating.subscribe
+      };
+    },
+    session: stores.session
+  };
+};
+var page = {
+  subscribe(fn) {
+    const store = getStores().page;
+    return store.subscribe(fn);
+  }
+};
+var error2 = (verb) => {
+  throw new Error(ssr ? `Can only ${verb} session store in browser` : `Cannot ${verb} session store before subscribing`);
+};
+var session = {
+  subscribe(fn) {
+    const store = getStores().session;
+    if (!ssr) {
+      session.set = store.set;
+      session.update = store.update;
+    }
+    return store.subscribe(fn);
+  },
+  set: (value) => {
+    error2("set");
+  },
+  update: (updater) => {
+    error2("update");
+  }
+};
+var Button = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { text } = $$props;
+  let { clickEvent } = $$props;
+  let { href } = $$props;
+  if ($$props.text === void 0 && $$bindings.text && text !== void 0)
+    $$bindings.text(text);
+  if ($$props.clickEvent === void 0 && $$bindings.clickEvent && clickEvent !== void 0)
+    $$bindings.clickEvent(clickEvent);
+  if ($$props.href === void 0 && $$bindings.href && href !== void 0)
+    $$bindings.href(href);
+  return `<a${add_attribute("href", href, 0)} class="${"mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg"}">${text ? ` ${escape2(text)} ` : ` ${slots.default ? slots.default({}) : ``} `}</a>`;
+});
+var css$5 = {
+  code: "a.svelte-ykhaqc{margin-top:1rem;font-size:1rem;line-height:1.5rem;margin-right:1rem;display:inline;color:rgba(255,255,255,var(--tw-text-opacity))}a.svelte-ykhaqc,a.svelte-ykhaqc:hover{--tw-text-opacity:1}a.svelte-ykhaqc:hover{color:rgba(99,102,241,var(--tw-text-opacity))}@media(min-width:1024px){a.svelte-ykhaqc{margin-top:0;display:inline-block}}",
+  map: '{"version":3,"file":"header.svelte","sources":["header.svelte"],"sourcesContent":["<script>\\r\\n  import { session } from \\"$app/stores\\";\\r\\n  import Button from \\"$lib/components/generics/button.svelte\\";\\r\\n  // import Href from \\"./generics/Href.svelte\\";\\r\\n\\r\\n  function toggleMenu() {\\r\\n    var item = document.getElementById(\\"hidden-menu\\");\\r\\n    var btn = document.getElementById(\\"hidden-menubtn\\");\\r\\n\\r\\n    item.classList.toggle(\\"hidden\\");\\r\\n    btn.classList.toggle(\\"hidden\\");\\r\\n  }\\r\\n<\/script>\\r\\n\\r\\n<!-- component -->\\r\\n<nav\\r\\n  class=\\"flex justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left\\"\\r\\n>\\r\\n  <div class=\\"flex items-center flex-no-shrink text-white mr-6\\">\\r\\n    <span class=\\"font-semibold text-xl tracking-tight text-gray-50\\"\\r\\n      ><a href=\\"/\\"\\r\\n        ><img\\r\\n          class=\\"w-60 md:w-72 lg:w-72\\"\\r\\n          src=\\"logo_light.webp\\"\\r\\n          alt=\\"Digital Business Keys\\"\\r\\n        /></a\\r\\n      ></span\\r\\n    >\\r\\n  </div>\\r\\n  <div class=\\"block lg:hidden z-50 lg:py-2\\">\\r\\n    <button\\r\\n      on:click={toggleMenu}\\r\\n      class=\\"flex px-3 my-3 md:my-5 lg:py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white\\"\\r\\n    >\\r\\n      <svg\\r\\n        class=\\"h-3 w-3\\"\\r\\n        viewBox=\\"0 0 20 20\\"\\r\\n        fill=\\"white\\"\\r\\n        xmlns=\\"http://www.w3.org/2000/svg\\"\\r\\n        ><title>Menu</title>\\r\\n        <path d=\\"M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z\\" /></svg\\r\\n      >\\r\\n    </button>\\r\\n  </div>\\r\\n  <div\\r\\n    class=\\"w-full block flex-grow lg:flex lg:items-center md:items-center lg:w-auto z-50 md:text-center lg:text-center\\"\\r\\n  >\\r\\n    <div\\r\\n      id=\\"hidden-menu\\"\\r\\n      class=\\"text-sm lg:flex-grow hidden lg:block md:items-center lg:items-center md:text-center lg:text-center\\"\\r\\n    >\\r\\n      <a href=\\"/docs\\" rel=\\"prefetch\\" class=\\"nav-link\\" on:click={toggleMenu}\\r\\n        >Docs</a\\r\\n      >\\r\\n      <a href=\\"/features\\" rel=\\"prefetch\\" on:click={toggleMenu}>Features</a>\\r\\n      <a href=\\"/blog\\" rel=\\"prefetch\\" on:click={toggleMenu}>Blog</a>\\r\\n      <a href=\\"contact\\" rel=\\"prefetch\\" on:click={toggleMenu}>Contact Us</a>\\r\\n    </div>\\r\\n    {#if $session.user}\\r\\n      <div id=\\"hidden-menubtn\\" class=\\"hidden lg:block\\">\\r\\n        <Button text=\\"Dashboard\\" href=\\"/dashboard\\" clickEvent={toggleMenu} />\\r\\n        <Button text=\\"Logout\\" href=\\"/logout\\" clickEvent={toggleMenu} />\\r\\n      </div>\\r\\n    {:else}\\r\\n      <div id=\\"hidden-menubtn\\" class=\\"hidden lg:block\\">\\r\\n        <Button text=\\"Sign Up\\" href=\\"/signup\\" clickEvent={toggleMenu} />\\r\\n        <Button text=\\"Sign In\\" href=\\"/login\\" clickEvent={toggleMenu} />\\r\\n      </div>\\r\\n    {/if}\\r\\n  </div>\\r\\n</nav>\\r\\n\\r\\n<style>a{margin-top:1rem;font-size:1rem;line-height:1.5rem;margin-right:1rem;display:inline;color:rgba(255,255,255,var(--tw-text-opacity))}a,a:hover{--tw-text-opacity:1}a:hover{color:rgba(99,102,241,var(--tw-text-opacity))}@media (min-width:1024px){a{margin-top:0;display:inline-block}}</style>\\r\\n"],"names":[],"mappings":"AAwEO,eAAC,CAAC,WAAW,IAAI,CAAC,UAAU,IAAI,CAAC,YAAY,MAAM,CAAC,aAAa,IAAI,CAAC,QAAQ,MAAM,CAAC,MAAM,KAAK,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,iBAAiB,CAAC,CAAC,CAAC,eAAC,CAAC,eAAC,MAAM,CAAC,kBAAkB,CAAC,CAAC,eAAC,MAAM,CAAC,MAAM,KAAK,EAAE,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,iBAAiB,CAAC,CAAC,CAAC,MAAM,AAAC,WAAW,MAAM,CAAC,CAAC,eAAC,CAAC,WAAW,CAAC,CAAC,QAAQ,YAAY,CAAC,CAAC"}'
+};
+function toggleMenu() {
+  var item = document.getElementById("hidden-menu");
+  var btn = document.getElementById("hidden-menubtn");
+  item.classList.toggle("hidden");
+  btn.classList.toggle("hidden");
+}
+var Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $session, $$unsubscribe_session;
+  $$unsubscribe_session = subscribe(session, (value) => $session = value);
+  $$result.css.add(css$5);
+  $$unsubscribe_session();
+  return `
+<nav class="${"flex justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left"}"><div class="${"flex items-center flex-no-shrink text-white mr-6"}"><span class="${"font-semibold text-xl tracking-tight text-gray-50"}"><a href="${"/"}" class="${"svelte-ykhaqc"}"><img class="${"w-60 md:w-72 lg:w-72"}" src="${"logo_light.webp"}" alt="${"Digital Business Keys"}"></a></span></div>
+  <div class="${"block lg:hidden z-50 lg:py-2"}"><button class="${"flex px-3 my-3 md:my-5 lg:py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white"}"><svg class="${"h-3 w-3"}" viewBox="${"0 0 20 20"}" fill="${"white"}" xmlns="${"http://www.w3.org/2000/svg"}"><title>Menu</title><path d="${"M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"}"></path></svg></button></div>
+  <div class="${"w-full block flex-grow lg:flex lg:items-center md:items-center lg:w-auto z-50 md:text-center lg:text-center"}"><div id="${"hidden-menu"}" class="${"text-sm lg:flex-grow hidden lg:block md:items-center lg:items-center md:text-center lg:text-center"}"><a href="${"/docs"}" rel="${"prefetch"}" class="${"nav-link svelte-ykhaqc"}">Docs</a>
+      <a href="${"/features"}" rel="${"prefetch"}" class="${"svelte-ykhaqc"}">Features</a>
+      <a href="${"/blog"}" rel="${"prefetch"}" class="${"svelte-ykhaqc"}">Blog</a>
+      <a href="${"contact"}" rel="${"prefetch"}" class="${"svelte-ykhaqc"}">Contact Us</a></div>
+    ${$session.user ? `<div id="${"hidden-menubtn"}" class="${"hidden lg:block"}">${validate_component(Button, "Button").$$render($$result, {
+    text: "Dashboard",
+    href: "/dashboard",
+    clickEvent: toggleMenu
+  }, {}, {})}
+        ${validate_component(Button, "Button").$$render($$result, {
+    text: "Logout",
+    href: "/logout",
+    clickEvent: toggleMenu
+  }, {}, {})}</div>` : `<div id="${"hidden-menubtn"}" class="${"hidden lg:block"}">${validate_component(Button, "Button").$$render($$result, {
+    text: "Sign Up",
+    href: "/signup",
+    clickEvent: toggleMenu
+  }, {}, {})}
+        ${validate_component(Button, "Button").$$render($$result, {
+    text: "Sign In",
+    href: "/login",
+    clickEvent: toggleMenu
+  }, {}, {})}</div>`}</div>
+</nav>`;
+});
+var _layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `${validate_component(Header, "Header").$$render($$result, {}, {}, {})}
+
+${slots.default ? slots.default({}) : ``}
+
+${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}`;
+});
+var __layout = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Layout
+  "default": _layout
 });
-function load$5({error: error2, status}) {
-  return {props: {error: error2, status}};
+var css$4 = {
+  code: "section.svelte-15d98kd{margin-top:var(--xx-large)}section.svelte-15d98kd:last-of-type{margin-bottom:var(--xx-large)}@media(max-width:972px){section.svelte-15d98kd{margin-top:var(--x-large)}section.svelte-15d98kd:last-of-type{margin-bottom:var(--x-large)}}",
+  map: '{"version":3,"file":"section.svelte","sources":["section.svelte"],"sourcesContent":["<script>\\r\\n    export let id;\\r\\n  <\/script>\\r\\n  \\r\\n  <style lang=\\"scss\\">section{margin-top:var(--xx-large)}section:last-of-type{margin-bottom:var(--xx-large)}@media (max-width:972px){section{margin-top:var(--x-large)}section:last-of-type{margin-bottom:var(--x-large)}}</style>\\r\\n  \\r\\n  <section {id}>\\r\\n    <slot />\\r\\n  </section>"],"names":[],"mappings":"AAIqB,sBAAO,CAAC,WAAW,IAAI,UAAU,CAAC,CAAC,sBAAO,aAAa,CAAC,cAAc,IAAI,UAAU,CAAC,CAAC,MAAM,AAAC,WAAW,KAAK,CAAC,CAAC,sBAAO,CAAC,WAAW,IAAI,SAAS,CAAC,CAAC,sBAAO,aAAa,CAAC,cAAc,IAAI,SAAS,CAAC,CAAC,CAAC"}'
+};
+var Section = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { id } = $$props;
+  if ($$props.id === void 0 && $$bindings.id && id !== void 0)
+    $$bindings.id(id);
+  $$result.css.add(css$4);
+  return `<section${add_attribute("id", id, 0)} class="${"svelte-15d98kd"}">${slots.default ? slots.default({}) : ``}</section>`;
+});
+var prerender$1 = true;
+function load$5({ error: error22, status }) {
+  return { props: { error: error22, status } };
 }
-var Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {status} = $$props;
-  let {error: error2} = $$props;
+var _error = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { status } = $$props;
+  let { error: error22 } = $$props;
   if ($$props.status === void 0 && $$bindings.status && status !== void 0)
     $$bindings.status(status);
-  if ($$props.error === void 0 && $$bindings.error && error2 !== void 0)
-    $$bindings.error(error2);
-  return `<h1>${escape2(status)}</h1>
+  if ($$props.error === void 0 && $$bindings.error && error22 !== void 0)
+    $$bindings.error(error22);
+  return `<div class="${"error-page row"}">${validate_component(Section, "Section").$$render($$result, {}, {}, {
+    default: () => `<img src="${"/images/illustration-large.jpg"}" alt="${"Digital Business Keys"}">
+    <h1>${escape2(status)}</h1>
+    <p>Oh, no! Something went wrong on our side.</p>
 
-<p>${escape2(error2.message)}</p>
+    ${``}
 
+    <p><a href="${"/contact"}">Contact Us</a></p>
+    <p><a class="${"btn"}" href="${"/"}">Go Home</a></p>`
+  })}</div>
 
-${error2.stack ? `<pre>${escape2(error2.stack)}</pre>` : ``}`;
+${``}`;
 });
-var error$1 = /* @__PURE__ */ Object.freeze({
+var __error = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Error$1,
+  "default": _error,
+  prerender: prerender$1,
   load: load$5
 });
 var Call_to_action = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -3059,7 +3272,7 @@ var Features$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 });
 var css$3 = {
   code: ".active.svelte-1hd2jug{--tw-bg-opacity:1;background-color:rgba(99,102,241,var(--tw-bg-opacity))}",
-  map: `{"version":3,"file":"pricing.svelte","sources":["pricing.svelte"],"sourcesContent":["<script>\\r\\n    let priceType = \\"monthly\\";\\r\\n\\r\\n    function toggleMonthly() {\\r\\n        priceType = \\"monthly\\";\\r\\n    }\\r\\n\\r\\n    function toggleAnnual() {\\r\\n        priceType = \\"yearly\\";\\r\\n    }\\r\\n</script>\\r\\n\\r\\n<style lang=\\"postcss\\">.active{--tw-bg-opacity:1;background-color:rgba(99,102,241,var(--tw-bg-opacity))}</style>\\r\\n\\r\\n<section class=\\"text-gray-50 body-font overflow-hidden\\">\\r\\n    <div class=\\"container px-5 py-24 mx-auto\\">\\r\\n        <div class=\\"flex flex-col text-center w-full mb-20\\">\\r\\n            <h1 class=\\"sm:text-4xl text-3xl font-medium title-font mb-2\\">\\r\\n                Pricing\\r\\n            </h1>\\r\\n            <p class=\\"lg:w-2/3 mx-auto leading-relaxed text-base\\">\\r\\n                A free trial and different tiers to cater to all types of users\\r\\n                and budgets.\\r\\n            </p>\\r\\n            <div\\r\\n                class=\\"flex mx-auto border-2 border-indigo-500 rounded overflow-hidden mt-6\\">\\r\\n                <button\\r\\n                    class:active={priceType === 'monthly'}\\r\\n                    class=\\"py-1 px-4 text-white focus:outline-none\\"\\r\\n                    on:click={toggleMonthly}>Monthly</button>\\r\\n                <button\\r\\n                    class:active={priceType === 'yearly'}\\r\\n                    class=\\"py-1 px-4 focus:outline-none\\"\\r\\n                    on:click={toggleAnnual}>Annually</button>\\r\\n            </div>\\r\\n        </div>\\r\\n        <div class=\\"flex flex-wrap -m-4\\">\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden\\">\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        TRIAL\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl pb-4 mb-4 border-b border-gray-200 leading-none\\">\\r\\n                        Free\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save your Digital Assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save your Important Business Details\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>View status of your assets\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-400 mt-3\\">\\r\\n                        Try the app for free for 14 days.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-indigo-500 flex flex-col relative overflow-hidden\\">\\r\\n                    <span\\r\\n                        class=\\"bg-indigo-500 text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl\\">POPULAR</span>\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        ESSENTIAL\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl leading-none flex items-center pb-4 mb-4 border-b border-gray-200\\">\\r\\n                        {#if priceType == 'monthly'}\\r\\n                            <span>$5</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/mo</span>\\r\\n                        {:else}\\r\\n                            <span>$50</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/yr</span>\\r\\n                        {/if}\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>All Trial Features\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save multiple assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Email and export\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-500 mt-3\\">\\r\\n                        All the features for your small business.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden\\">\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        PREMIUM\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl leading-none flex items-center pb-4 mb-4 border-b border-gray-200\\">\\r\\n                        {#if priceType == 'monthly'}\\r\\n                            <span>$8</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/mo</span>\\r\\n                        {:else}\\r\\n                            <span>$90</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/yr</span>\\r\\n                        {/if}\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>All Trial & Essential Features\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Setup notifications for your assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Automatic service checks to ensure your assets\\r\\n                        are always working\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-500 mt-3\\">\\r\\n                        Perfect for business critical services.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</section>\\r\\n"],"names":[],"mappings":"AAYsB,sBAAO,CAAC,gBAAgB,CAAC,CAAC,iBAAiB,KAAK,EAAE,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,eAAe,CAAC,CAAC,CAAC"}`
+  map: `{"version":3,"file":"pricing.svelte","sources":["pricing.svelte"],"sourcesContent":["<script>\\r\\n    let priceType = \\"monthly\\";\\r\\n\\r\\n    function toggleMonthly() {\\r\\n        priceType = \\"monthly\\";\\r\\n    }\\r\\n\\r\\n    function toggleAnnual() {\\r\\n        priceType = \\"yearly\\";\\r\\n    }\\r\\n<\/script>\\r\\n\\r\\n<style lang=\\"postcss\\">.active{--tw-bg-opacity:1;background-color:rgba(99,102,241,var(--tw-bg-opacity))}</style>\\r\\n\\r\\n<section class=\\"text-gray-50 body-font overflow-hidden\\">\\r\\n    <div class=\\"container px-5 py-24 mx-auto\\">\\r\\n        <div class=\\"flex flex-col text-center w-full mb-20\\">\\r\\n            <h1 class=\\"sm:text-4xl text-3xl font-medium title-font mb-2\\">\\r\\n                Pricing\\r\\n            </h1>\\r\\n            <p class=\\"lg:w-2/3 mx-auto leading-relaxed text-base\\">\\r\\n                A free trial and different tiers to cater to all types of users\\r\\n                and budgets.\\r\\n            </p>\\r\\n            <div\\r\\n                class=\\"flex mx-auto border-2 border-indigo-500 rounded overflow-hidden mt-6\\">\\r\\n                <button\\r\\n                    class:active={priceType === 'monthly'}\\r\\n                    class=\\"py-1 px-4 text-white focus:outline-none\\"\\r\\n                    on:click={toggleMonthly}>Monthly</button>\\r\\n                <button\\r\\n                    class:active={priceType === 'yearly'}\\r\\n                    class=\\"py-1 px-4 focus:outline-none\\"\\r\\n                    on:click={toggleAnnual}>Annually</button>\\r\\n            </div>\\r\\n        </div>\\r\\n        <div class=\\"flex flex-wrap -m-4\\">\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden\\">\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        TRIAL\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl pb-4 mb-4 border-b border-gray-200 leading-none\\">\\r\\n                        Free\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save your Digital Assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save your Important Business Details\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>View status of your assets\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-400 mt-3\\">\\r\\n                        Try the app for free for 14 days.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-indigo-500 flex flex-col relative overflow-hidden\\">\\r\\n                    <span\\r\\n                        class=\\"bg-indigo-500 text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl\\">POPULAR</span>\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        ESSENTIAL\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl leading-none flex items-center pb-4 mb-4 border-b border-gray-200\\">\\r\\n                        {#if priceType == 'monthly'}\\r\\n                            <span>$5</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/mo</span>\\r\\n                        {:else}\\r\\n                            <span>$50</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/yr</span>\\r\\n                        {/if}\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>All Trial Features\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Save multiple assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Email and export\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-500 mt-3\\">\\r\\n                        All the features for your small business.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n            <div class=\\"p-4 xl:w-1/3 md:w-1/3 w-full\\">\\r\\n                <div\\r\\n                    class=\\"h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden\\">\\r\\n                    <h2\\r\\n                        class=\\"text-sm tracking-widest title-font mb-1 font-medium\\">\\r\\n                        PREMIUM\\r\\n                    </h2>\\r\\n                    <h1\\r\\n                        class=\\"text-5xl leading-none flex items-center pb-4 mb-4 border-b border-gray-200\\">\\r\\n                        {#if priceType == 'monthly'}\\r\\n                            <span>$8</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/mo</span>\\r\\n                        {:else}\\r\\n                            <span>$90</span>\\r\\n                            <span\\r\\n                                class=\\"text-lg ml-1 font-normal text-gray-500\\">/yr</span>\\r\\n                        {/if}\\r\\n                    </h1>\\r\\n                    <p class=\\"flex items-center  mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>All Trial & Essential Features\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-2\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Setup notifications for your assets\\r\\n                    </p>\\r\\n                    <p class=\\"flex items-center mb-6\\">\\r\\n                        <span\\r\\n                            class=\\"w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0\\">\\r\\n                            <svg\\r\\n                                fill=\\"none\\"\\r\\n                                stroke=\\"currentColor\\"\\r\\n                                stroke-linecap=\\"round\\"\\r\\n                                stroke-linejoin=\\"round\\"\\r\\n                                stroke-width=\\"2.5\\"\\r\\n                                class=\\"w-3 h-3\\"\\r\\n                                viewBox=\\"0 0 24 24\\">\\r\\n                                <path d=\\"M20 6L9 17l-5-5\\" />\\r\\n                            </svg>\\r\\n                        </span>Automatic service checks to ensure your assets\\r\\n                        are always working\\r\\n                    </p>\\r\\n                    <button\\r\\n                        class=\\"flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded\\">Buy\\r\\n                        <svg\\r\\n                            fill=\\"none\\"\\r\\n                            stroke=\\"currentColor\\"\\r\\n                            stroke-linecap=\\"round\\"\\r\\n                            stroke-linejoin=\\"round\\"\\r\\n                            stroke-width=\\"2\\"\\r\\n                            class=\\"w-4 h-4 ml-auto\\"\\r\\n                            viewBox=\\"0 0 24 24\\">\\r\\n                            <path d=\\"M5 12h14M12 5l7 7-7 7\\" />\\r\\n                        </svg>\\r\\n                    </button>\\r\\n                    <p class=\\"text-xs text-gray-500 mt-3\\">\\r\\n                        Perfect for business critical services.\\r\\n                    </p>\\r\\n                </div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</section>\\r\\n"],"names":[],"mappings":"AAYsB,sBAAO,CAAC,gBAAgB,CAAC,CAAC,iBAAiB,KAAK,EAAE,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,eAAe,CAAC,CAAC,CAAC"}`
 };
 var Pricing$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$3);
@@ -3148,69 +3361,13 @@ var Signup = create_ssr_component(($$result, $$props, $$bindings, slots) => {
                 Service and
                 <a href="${"/privacy-policy"}">Privacy Policy.</a></p></div></div></section>`;
 });
-var Button = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {text} = $$props;
-  let {clickEvent} = $$props;
-  let {href} = $$props;
-  if ($$props.text === void 0 && $$bindings.text && text !== void 0)
-    $$bindings.text(text);
-  if ($$props.clickEvent === void 0 && $$bindings.clickEvent && clickEvent !== void 0)
-    $$bindings.clickEvent(clickEvent);
-  if ($$props.href === void 0 && $$bindings.href && href !== void 0)
-    $$bindings.href(href);
-  return `<a${add_attribute("href", href, 0)} class="${"mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg"}">${text ? ` ${escape2(text)} ` : ` ${slots.default ? slots.default({}) : ``} `}</a>`;
-});
-var ssr = typeof window === "undefined";
-var getStores = () => {
-  const stores = getContext("__svelte__");
-  return {
-    page: {
-      subscribe: stores.page.subscribe
-    },
-    navigating: {
-      subscribe: stores.navigating.subscribe
-    },
-    get preloading() {
-      console.error("stores.preloading is deprecated; use stores.navigating instead");
-      return {
-        subscribe: stores.navigating.subscribe
-      };
-    },
-    session: stores.session
-  };
-};
-var page = {
-  subscribe(fn) {
-    const store = getStores().page;
-    return store.subscribe(fn);
-  }
-};
-var error = (verb) => {
-  throw new Error(ssr ? `Can only ${verb} session store in browser` : `Cannot ${verb} session store before subscribing`);
-};
-var session = {
-  subscribe(fn) {
-    const store = getStores().session;
-    if (!ssr) {
-      session.set = store.set;
-      session.update = store.update;
-    }
-    return store.subscribe(fn);
-  },
-  set: (value) => {
-    error("set");
-  },
-  update: (updater) => {
-    error("update");
-  }
-};
 var Open_graph = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $page, $$unsubscribe_page;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  let {description} = $$props;
-  let {image} = $$props;
-  let {title} = $$props;
-  let {type} = $$props;
+  let { description } = $$props;
+  let { image } = $$props;
+  let { title } = $$props;
+  let { type } = $$props;
   const url = `https://${$page.host}${$page.path}`;
   if ($$props.description === void 0 && $$bindings.description && description !== void 0)
     $$bindings.description(description);
@@ -3242,9 +3399,9 @@ var Routes = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         simple-to-use Digital Business Keys app.
       </p>
 
-      ${$session.user ? `${validate_component(Button, "Button").$$render($$result, {text: "Dashboard", href: "dashboard"}, {}, {})}` : `<div class="${"lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left"}">${validate_component(Button, "Button").$$render($$result, {text: "Try Free!", href: "signup"}, {}, {})}
+      ${$session.user ? `${validate_component(Button, "Button").$$render($$result, { text: "Dashboard", href: "dashboard" }, {}, {})}` : `<div class="${"lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left"}">${validate_component(Button, "Button").$$render($$result, { text: "Try Free!", href: "signup" }, {}, {})}
 
-          ${validate_component(Button, "Button").$$render($$result, {text: "Sign In", href: "login"}, {}, {})}</div>`}</div>
+          ${validate_component(Button, "Button").$$render($$result, { text: "Sign In", href: "login" }, {}, {})}</div>`}</div>
     
     <div class="${"w-full md:w-1/2 py-6 text-center"}"><img class="${"w-full z-50 rounded-md"}" src="${"/images/feature-image2.webp"}" alt="${"people building app"}"></div></div>
   <section class="${"container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"}">${validate_component(Featured_section, "FeaturedSection").$$render($$result, {}, {}, {})}
@@ -3256,7 +3413,7 @@ var Routes = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$d = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Routes
+  "default": Routes
 });
 var Terms_of_service = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return ``;
@@ -3264,11 +3421,11 @@ var Terms_of_service = create_ssr_component(($$result, $$props, $$bindings, slot
 var index$c = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Terms_of_service
+  "default": Terms_of_service
 });
 var css$2 = {
   code: "h1.svelte-czkh7d,h2.svelte-czkh7d{padding-bottom:1.25rem}p.svelte-czkh7d{padding-bottom:2.5rem}",
-  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n  // export const prerender = true;\\r\\n  // export const hydrate = true;\\r\\n  // export const router = true;\\r\\n</script>\\r\\n\\r\\n<section>\\r\\n  <h1>Privacy Policy</h1>\\r\\n\\r\\n  <h2>\\r\\n    In this Privacy Policy \u201CServices\u201D indicates the Service and products offered\\r\\n    and provided by Digital Business Keys across desktop, mobile, tablet and\\r\\n    apps (including any subdomains)\\r\\n  </h2>\\r\\n\\r\\n  <h2>Information we collect about you</h2>\\r\\n  <p>\\r\\n    We collect information about you when you input it into the Services or\\r\\n    otherwise provide it to us and when other sources provide it to us including\\r\\n    but not limited to when you register for an account, create or modify your\\r\\n    profile, sign-up for or make purchases through the Services. Information you\\r\\n    provide to us may be including, but is not limited to your name, address,\\r\\n    phone number, email, gender, occupation, business interests and any other\\r\\n    information provided. We keep track of your preferences when you select\\r\\n    settings within the Services. We collect information about you when you use\\r\\n    our Services, including browsing our websites and taking certain actions\\r\\n    within the Services.\\r\\n  </p>\\r\\n\\r\\n  <h2>How we use information we collect</h2>\\r\\n\\r\\n  <p>\\r\\n    We use the personal information we have collected largely for the purpose of\\r\\n    providing you with products and services that you have requested by\\r\\n    registering an account and agreeing to the Services Terms and Conditions to\\r\\n    create and maintain your account and ensure you comply and adhere to our\\r\\n    terms of use. We are always improving our Services. We use information\\r\\n    identified from usage of the service and feedback to troubleshoot, identify\\r\\n    trends and usage and improve our Services as well as to develop new\\r\\n    products, features and technologies that benefit our users. We send you\\r\\n    email notifications when you interact with the Services. We use your contact\\r\\n    information to send transactional communications via email and within the\\r\\n    Services, including confirming your purchases, reminding you of subscription\\r\\n    expirations,updates, security alerts, and administrative messages. We use\\r\\n    your contact information and information about how you use the Services to\\r\\n    send promotional communications that may be of specific interest to you,\\r\\n    including by email with the ability to opt out of the promotional\\r\\n    communications easily accessible.\\r\\n  </p>\\r\\n\\r\\n  <h2>Security</h2>\\r\\n  <p>\\r\\n    We strive to ensure the security, integrity and privacy of personal\\r\\n    information we collect. We use reasonable security measures to protect your\\r\\n    personal information from unauthorised access, modification and disclosure.\\r\\n    Our employees, contractors, agents and service providers who provide\\r\\n    services related to our information systems, are obliged by law to respect\\r\\n    the confidentiality of any personal information held by us. We review and\\r\\n    update our security measures in light of current technologies.\\r\\n    Unfortunately, no data transmission over the internet can be guaranteed to\\r\\n    be totally secure.\\r\\n  </p>\\r\\n\\r\\n  <h2>Access to your Information</h2>\\r\\n\\r\\n  <p>\\r\\n    If, at any time, you discover that information held about you is incorrect\\r\\n    or you would like to review and confirm the accuracy of your personal\\r\\n    information, you can contact us. Our Services give you the ability to access\\r\\n    and update certain information about you from within the Service. You can\\r\\n    also gain access to the personal information we hold about you, subject to\\r\\n    certain exceptions provided for by law. To request access to your personal\\r\\n    information, please contact us.\\r\\n  </p>\\r\\n\\r\\n  <h2>Changes to our Privacy Policy</h2>\\r\\n\\r\\n  <p>\\r\\n    Amendments to this policy will be posted on this page and will be effective\\r\\n    when posted, if the changes are significant, we will provide a more\\r\\n    prominent notice.\\r\\n  </p>\\r\\n</section>\\r\\n\\r\\n<style lang=\\"postcss\\">h1,h2{padding-bottom:1.25rem}p{padding-bottom:2.5rem}</style>\\r\\n"],"names":[],"mappings":"AAoFsB,gBAAE,CAAC,gBAAE,CAAC,eAAe,OAAO,CAAC,eAAC,CAAC,eAAe,MAAM,CAAC"}'
+  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n  // export const prerender = true;\\r\\n  // export const hydrate = true;\\r\\n  // export const router = true;\\r\\n<\/script>\\r\\n\\r\\n<section>\\r\\n  <h1>Privacy Policy</h1>\\r\\n\\r\\n  <h2>\\r\\n    In this Privacy Policy \u201CServices\u201D indicates the Service and products offered\\r\\n    and provided by Digital Business Keys across desktop, mobile, tablet and\\r\\n    apps (including any subdomains)\\r\\n  </h2>\\r\\n\\r\\n  <h2>Information we collect about you</h2>\\r\\n  <p>\\r\\n    We collect information about you when you input it into the Services or\\r\\n    otherwise provide it to us and when other sources provide it to us including\\r\\n    but not limited to when you register for an account, create or modify your\\r\\n    profile, sign-up for or make purchases through the Services. Information you\\r\\n    provide to us may be including, but is not limited to your name, address,\\r\\n    phone number, email, gender, occupation, business interests and any other\\r\\n    information provided. We keep track of your preferences when you select\\r\\n    settings within the Services. We collect information about you when you use\\r\\n    our Services, including browsing our websites and taking certain actions\\r\\n    within the Services.\\r\\n  </p>\\r\\n\\r\\n  <h2>How we use information we collect</h2>\\r\\n\\r\\n  <p>\\r\\n    We use the personal information we have collected largely for the purpose of\\r\\n    providing you with products and services that you have requested by\\r\\n    registering an account and agreeing to the Services Terms and Conditions to\\r\\n    create and maintain your account and ensure you comply and adhere to our\\r\\n    terms of use. We are always improving our Services. We use information\\r\\n    identified from usage of the service and feedback to troubleshoot, identify\\r\\n    trends and usage and improve our Services as well as to develop new\\r\\n    products, features and technologies that benefit our users. We send you\\r\\n    email notifications when you interact with the Services. We use your contact\\r\\n    information to send transactional communications via email and within the\\r\\n    Services, including confirming your purchases, reminding you of subscription\\r\\n    expirations,updates, security alerts, and administrative messages. We use\\r\\n    your contact information and information about how you use the Services to\\r\\n    send promotional communications that may be of specific interest to you,\\r\\n    including by email with the ability to opt out of the promotional\\r\\n    communications easily accessible.\\r\\n  </p>\\r\\n\\r\\n  <h2>Security</h2>\\r\\n  <p>\\r\\n    We strive to ensure the security, integrity and privacy of personal\\r\\n    information we collect. We use reasonable security measures to protect your\\r\\n    personal information from unauthorised access, modification and disclosure.\\r\\n    Our employees, contractors, agents and service providers who provide\\r\\n    services related to our information systems, are obliged by law to respect\\r\\n    the confidentiality of any personal information held by us. We review and\\r\\n    update our security measures in light of current technologies.\\r\\n    Unfortunately, no data transmission over the internet can be guaranteed to\\r\\n    be totally secure.\\r\\n  </p>\\r\\n\\r\\n  <h2>Access to your Information</h2>\\r\\n\\r\\n  <p>\\r\\n    If, at any time, you discover that information held about you is incorrect\\r\\n    or you would like to review and confirm the accuracy of your personal\\r\\n    information, you can contact us. Our Services give you the ability to access\\r\\n    and update certain information about you from within the Service. You can\\r\\n    also gain access to the personal information we hold about you, subject to\\r\\n    certain exceptions provided for by law. To request access to your personal\\r\\n    information, please contact us.\\r\\n  </p>\\r\\n\\r\\n  <h2>Changes to our Privacy Policy</h2>\\r\\n\\r\\n  <p>\\r\\n    Amendments to this policy will be posted on this page and will be effective\\r\\n    when posted, if the changes are significant, we will provide a more\\r\\n    prominent notice.\\r\\n  </p>\\r\\n</section>\\r\\n\\r\\n<style lang=\\"postcss\\">h1,h2{padding-bottom:1.25rem}p{padding-bottom:2.5rem}</style>\\r\\n"],"names":[],"mappings":"AAoFsB,gBAAE,CAAC,gBAAE,CAAC,eAAe,OAAO,CAAC,eAAC,CAAC,eAAe,MAAM,CAAC"}'
 };
 var Privacy_policy = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$2);
@@ -3346,7 +3503,7 @@ var Privacy_policy = create_ssr_component(($$result, $$props, $$bindings, slots)
 var index$b = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Privacy_policy
+  "default": Privacy_policy
 });
 var Changelog = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return ``;
@@ -3354,26 +3511,26 @@ var Changelog = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$a = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Changelog
+  "default": Changelog
 });
 var User_asset_card = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {user} = $$props;
+  let { user } = $$props;
   if ($$props.user === void 0 && $$bindings.user && user !== void 0)
     $$bindings.user(user);
   return `<div><h1 class="${"text-2xl font-medium text-white"}">Your Digital Assets</h1>
 
   <div class="${"bg-white .border rounded-md text-black"}">${escape2(user.username)}</div></div>`;
 });
-function load$4({session: session2}) {
-  const {user} = session2;
+function load$4({ session: session2 }) {
+  const { user } = session2;
   console.log("Session Dashboard:", session2);
   if (!user) {
-    return {status: 302, redirect: "/login"};
+    return { status: 302, redirect: "/login" };
   }
-  return {props: {user}};
+  return { props: { user } };
 }
 var Dashboard = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {user} = $$props;
+  let { user } = $$props;
   if ($$props.user === void 0 && $$bindings.user && user !== void 0)
     $$bindings.user(user);
   return `
@@ -3388,14 +3545,14 @@ var Dashboard = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 
             <div><h1 class="${"text-2xl font-medium text-white"}">Welcome ${escape2(user.username)}</h1></div></div></header>
 
-        <main class="${"flex-1 overflow-x-hidden overflow-y-auto"}"><div class="${"container mx-auto px-6 py-8"}"><div class="${"grid place-items-center h-96 text-gray-300 text-xl border-4 border-gray-300 border-dashed"}">${validate_component(User_asset_card, "UserAssetCard").$$render($$result, {user}, {}, {})}</div></div></main></div></div></div></div>
+        <main class="${"flex-1 overflow-x-hidden overflow-y-auto"}"><div class="${"container mx-auto px-6 py-8"}"><div class="${"grid place-items-center h-96 text-gray-300 text-xl border-4 border-gray-300 border-dashed"}">${validate_component(User_asset_card, "UserAssetCard").$$render($$result, { user }, {}, {})}</div></div></main></div></div></div></div>
 
 `;
 });
 var index$9 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Dashboard,
+  "default": Dashboard,
   load: load$4
 });
 var Features = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -3404,7 +3561,7 @@ var Features = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$8 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Features
+  "default": Features
 });
 function submit() {
 }
@@ -3422,7 +3579,7 @@ var Contact = create_ssr_component(($$result, $$props, $$bindings, slots) => {
             <input type="${"email"}" id="${"email"}" name="${"email"}" class="${"w-full bg-white-500 bg-opacity-50 rounded border border-gray-900 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"}" data-kwimpalastatus="${"alive"}" data-kwimpalaid="${"1610104456246-7"}"></div></div>
         <div class="${"p-2 w-full"}"><div class="${"relative"}" data-children-count="${"1"}"><label for="${"message"}" class="${"leading-7 text-sm text-gray-50"}">Message</label>
             <textarea id="${"message"}" name="${"message"}" class="${"w-full bg-white-500 bg-opacity-50 rounded border border-gray-900 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"}"></textarea></div></div>
-        <div class="${"p-2 w-full"}">${validate_component(Button, "Button").$$render($$result, {clickEvent: submit, href: "/"}, {}, {default: () => `Submit`})}</div>
+        <div class="${"p-2 w-full"}">${validate_component(Button, "Button").$$render($$result, { clickEvent: submit, href: "/" }, {}, { default: () => `Submit` })}</div>
         <div class="${"p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center"}"><a class="${"text-indigo-300 pb-4"}" href="${"mailto:digitalbusinesskeys@gmail.com&subject=Contact%20Form"}">Email Us</a><br>
 
           <span class="${"inline-flex pt-4"}"><a class="${"text-gray-500"}" href="${"https://www.facebook.com"}"><svg fill="${"currentColor"}" stroke-linecap="${"round"}" stroke-linejoin="${"round"}" stroke-width="${"2"}" class="${"w-5 h-5"}" viewBox="${"0 0 24 24"}"><path d="${"M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"}"></path></svg></a>
@@ -3431,7 +3588,7 @@ var Contact = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$7 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Contact
+  "default": Contact
 });
 var Pricing = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return ``;
@@ -3439,7 +3596,7 @@ var Pricing = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$6 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Pricing
+  "default": Pricing
 });
 function post(endpoint, data) {
   return fetch(endpoint, {
@@ -3451,13 +3608,13 @@ function post(endpoint, data) {
     }
   }).then((r) => r.json());
 }
-function load$3({session: session2}) {
-  const {user} = session2;
+function load$3({ session: session2 }) {
+  const { user } = session2;
   console.log(user);
   if (!user) {
-    return {status: 302, redirect: "/login"};
+    return { status: 302, redirect: "/login" };
   }
-  return {props: {user}};
+  return { props: { user } };
 }
 var Logout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $session, $$unsubscribe_session;
@@ -3472,7 +3629,7 @@ var Logout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$5 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Logout,
+  "default": Logout,
   load: load$3
 });
 var Signup_1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -3481,11 +3638,11 @@ var Signup_1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$4 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Signup_1
+  "default": Signup_1
 });
 var css$1 = {
   code: "h1.svelte-1bnbrug{--tw-text-opacity:1;color:rgba(165,180,252,var(--tw-text-opacity))}h1.svelte-1bnbrug,h2.svelte-1bnbrug{padding-bottom:1.25rem;font-size:1.25rem;line-height:1.75rem}p.svelte-1bnbrug{padding-bottom:2.5rem}",
-  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n\\t// export const prerender = true;\\r\\n</script>\\r\\n\\r\\n<style lang=\\"postcss\\">h1{--tw-text-opacity:1;color:rgba(165,180,252,var(--tw-text-opacity))}h1,h2{padding-bottom:1.25rem;font-size:1.25rem;line-height:1.75rem}p{padding-bottom:2.5rem}</style>\\r\\n\\r\\n\\r\\n<div class=\\"px-8 py-16 mx-auto max-w-5xl\\">\\r\\n\\t<h1>About Us</h1>\\r\\n\\r\\n\\t<p>\\r\\n\\t\\tDigital business keys is a critical app developed to empower businesses\\r\\n\\t\\tto take control of their digital business assets and respond to issues\\r\\n\\t\\tthat can commonly impact website availability, email receiving and\\r\\n\\t\\tsending and digital project assets. Digital Business Keys app provides a\\r\\n\\t\\tservice that has long been neglect by business owners and the industries\\r\\n\\t\\tthat assist them in taking their businesses online Designed to be as\\r\\n\\t\\tsimple as possible to allow any level of user to get the critical\\r\\n\\t\\tcontrol they need for the digital presence of their business.\\r\\n\\t</p>\\r\\n\\r\\n\\t<h2>Our Story</h2>\\r\\n\\r\\n\\t<p>\\r\\n\\t\\tOur team has extensive industry experience in developing and\\r\\n\\t\\timplementing custom and out of the box solutions. We thrive in\\r\\n\\t\\tenvironments that enable us to deliver the best results for our clients.\\r\\n\\t\\tFrom this fundamental work ethic grew the idea for the Digital Business\\r\\n\\t\\tKeys app as a tool to plug the gap we saw develop in the industry in\\r\\n\\t\\tcustomer education, knowledge and tools to provide confidence in\\r\\n\\t\\tmanagement of these business critical digital assets.\\r\\n\\t</p>\\r\\n</div>\\r\\n"],"names":[],"mappings":"AAIsB,iBAAE,CAAC,kBAAkB,CAAC,CAAC,MAAM,KAAK,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,iBAAiB,CAAC,CAAC,CAAC,iBAAE,CAAC,iBAAE,CAAC,eAAe,OAAO,CAAC,UAAU,OAAO,CAAC,YAAY,OAAO,CAAC,gBAAC,CAAC,eAAe,MAAM,CAAC"}'
+  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n\\t// export const prerender = true;\\r\\n<\/script>\\r\\n\\r\\n<style lang=\\"postcss\\">h1{--tw-text-opacity:1;color:rgba(165,180,252,var(--tw-text-opacity))}h1,h2{padding-bottom:1.25rem;font-size:1.25rem;line-height:1.75rem}p{padding-bottom:2.5rem}</style>\\r\\n\\r\\n\\r\\n<div class=\\"px-8 py-16 mx-auto max-w-5xl\\">\\r\\n\\t<h1>About Us</h1>\\r\\n\\r\\n\\t<p>\\r\\n\\t\\tDigital business keys is a critical app developed to empower businesses\\r\\n\\t\\tto take control of their digital business assets and respond to issues\\r\\n\\t\\tthat can commonly impact website availability, email receiving and\\r\\n\\t\\tsending and digital project assets. Digital Business Keys app provides a\\r\\n\\t\\tservice that has long been neglect by business owners and the industries\\r\\n\\t\\tthat assist them in taking their businesses online Designed to be as\\r\\n\\t\\tsimple as possible to allow any level of user to get the critical\\r\\n\\t\\tcontrol they need for the digital presence of their business.\\r\\n\\t</p>\\r\\n\\r\\n\\t<h2>Our Story</h2>\\r\\n\\r\\n\\t<p>\\r\\n\\t\\tOur team has extensive industry experience in developing and\\r\\n\\t\\timplementing custom and out of the box solutions. We thrive in\\r\\n\\t\\tenvironments that enable us to deliver the best results for our clients.\\r\\n\\t\\tFrom this fundamental work ethic grew the idea for the Digital Business\\r\\n\\t\\tKeys app as a tool to plug the gap we saw develop in the industry in\\r\\n\\t\\tcustomer education, knowledge and tools to provide confidence in\\r\\n\\t\\tmanagement of these business critical digital assets.\\r\\n\\t</p>\\r\\n</div>\\r\\n"],"names":[],"mappings":"AAIsB,iBAAE,CAAC,kBAAkB,CAAC,CAAC,MAAM,KAAK,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,iBAAiB,CAAC,CAAC,CAAC,iBAAE,CAAC,iBAAE,CAAC,eAAe,OAAO,CAAC,UAAU,OAAO,CAAC,YAAY,OAAO,CAAC,gBAAC,CAAC,eAAe,MAAM,CAAC"}'
 };
 var About = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
@@ -3515,11 +3672,11 @@ var About = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$3 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: About
+  "default": About
 });
-async function load$2({session: session2}) {
+async function load$2({ session: session2 }) {
   if (session2.jwt) {
-    return {status: 302, redirect: "/"};
+    return { status: 302, redirect: "/" };
   }
   return {};
 }
@@ -3539,7 +3696,7 @@ var Login = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$2 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Login,
+  "default": Login,
   load: load$2
 });
 var Blog = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -3548,7 +3705,7 @@ var Blog = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 var index$1 = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Blog
+  "default": Blog
 });
 var GET_DOCS = `
   {
@@ -3562,7 +3719,7 @@ var GET_DOCS = `
 `;
 var css = {
   code: 'ul.svelte-1kgxi19{margin:0 0 1em;line-height:1.5}h2.svelte-1kgxi19:before{display:block;content:" ";margin-top:-185px;height:185px;visibility:hidden;pointer-events:none}',
-  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n\\t// export const prerender = true;\\r\\n\\r\\n  import { GRAPHQL_URI } from \\"../../lib/config\\";\\r\\n  import { GET_DOCS } from \\"../../lib/graphql/requests\\";\\r\\n  console.log(GRAPHQL_URI);\\r\\n\\r\\n  /**\\r\\n   * @type {import(\'@sveltejs/kit\').Load}\\r\\n   */\\r\\n  export async function load() {\\r\\n    let items;\\r\\n    try {\\r\\n      const res = await fetch(`${GRAPHQL_URI}`, {\\r\\n        method: \\"POST\\",\\r\\n        headers: {\\r\\n          \\"Content-Type\\": \\"application/json\\",\\r\\n        },\\r\\n        body: JSON.stringify({ query: GET_DOCS }),\\r\\n      });\\r\\n\\r\\n      items = await res.json();\\r\\n      items = items.data.documentations;\\r\\n      console.log(items.data.documentations)\\r\\n    } catch (e) {\\r\\n      console.log(e.message);\\r\\n    }\\r\\n\\r\\n    return {\\r\\n      props: {\\r\\n        items,\\r\\n      },\\r\\n    };\\r\\n  }\\r\\n\\r\\n  let promise = load();\\r\\n</script>\\r\\n\\r\\n<script>\\r\\n  import snarkdown from \\"snarkdown\\";\\r\\n  import OpenGraph from \\"$lib/components/open-graph.svelte\\";\\r\\n\\r\\n  export let items;\\r\\n\\r\\n  function phoneNav() {\\r\\n    var item = document.getElementById(\\"p-nav\\");\\r\\n\\r\\n    item.classList.toggle(\\"hidden\\");\\r\\n  }\\r\\n</script>\\r\\n\\r\\n<OpenGraph\\r\\n  description=\\"Documentation for Digital Business Keys to explain core concepts such as DNS, Domain Names, Domain Hosts, Emails and more\\"\\r\\n  title=\\"Digital Business Keys - Documentation\\"\\r\\n  type=\\"website\\"\\r\\n/>\\r\\n\\r\\n{#await promise}\\r\\n\\r\\n  <p>...loading</p>\\r\\n{:then data}\\r\\n  <div class=\\"flex md:flex-row-reverse flex-wrap z-10 w-full max-w-8xl\\">\\r\\n    <div\\r\\n      id=\\"p-nav\\"\\r\\n      class=\\"hidden lg:flex lg:overflow-auto md:overflow-auto w-full md:w-1/5 bg-gray-900 px-2 text-center fixed md:bottom-10 md:pt-8 md:top-20 md:left-0 h-16 sm:h-full md:h-3/6 md:border-r-4 md:border-gray-600\\"\\r\\n    >\\r\\n      <div class=\\"md:relative mx-auto lg:float-right lg:px-6\\">\\r\\n        <ul\\r\\n          class=\\"m-2 p-6 bg-gray-200 rounded  max-h-screen list-reset lg:flex md:flex flex-column md:flex-col text-center md:text-left mt-20\\"\\r\\n        >\\r\\n          {#each items as doc}\\r\\n            <div\\r\\n              class=\\"lg:flex-none flex w-full md:max-w-xs bg-purple text-black\\"\\r\\n            >\\r\\n              <li class=\\"text-black pb-2\\">\\r\\n                <p class=\\"hover:bg-indigo-500 text-black\\">\\r\\n                  <a\\r\\n                    on:click={phoneNav}\\r\\n                    class=\\"text-black\\"\\r\\n                    rel=\\"prefetch\\"\\r\\n                    href=\\"docs#{doc.Slug}\\">{doc.title}</a\\r\\n                  >\\r\\n                </p>\\r\\n              </li>\\r\\n            </div>\\r\\n          {/each}\\r\\n        </ul>\\r\\n      </div>\\r\\n    </div>\\r\\n\\r\\n    <div class=\\"w-full md:w-4/5\\">\\r\\n      <h1\\r\\n        class=\\"z-0 sm:text-3xl text-2xl font-medium title-font text-gray-50 px-6 \\"\\r\\n      >\\r\\n        Documentation\\r\\n      </h1>\\r\\n      <div class=\\"container pt-12 px-6\\">\\r\\n        {#each items as doc}\\r\\n          <div id={doc.Slug} class=\\"mb-12 overflow-auto\\r\\n                    \\">\\r\\n            <h2 class=\\"pb-10\\">{doc.title}</h2>\\r\\n\\r\\n            <article class=\\"prose prose-indigo lg:prose-xl\\">\\r\\n              {@html snarkdown(doc.content)}\\r\\n            </article>\\r\\n          </div>\\r\\n        {/each}\\r\\n      </div>\\r\\n    </div>\\r\\n    <button\\r\\n      on:click={phoneNav}\\r\\n      class=\\"fixed z-50 bottom-4 right-4 w-16 h-16 rounded-full bg-gray-900 text-white block lg:hidden\\"\\r\\n    >\\r\\n      <svg\\r\\n        width=\\"24\\"\\r\\n        height=\\"24\\"\\r\\n        fill=\\"none\\"\\r\\n        class=\\"absolute top-1/2 left-1/2 -mt-3 -ml-3 transition duration-300 transform\\"\\r\\n        ><path\\r\\n          d=\\"M4 8h16M4 16h16\\"\\r\\n          stroke=\\"currentColor\\"\\r\\n          stroke-width=\\"2\\"\\r\\n          stroke-linecap=\\"round\\"\\r\\n          stroke-linejoin=\\"round\\"\\r\\n        /></svg\\r\\n      >\\r\\n    </button>\\r\\n\\r\\n  </div>\\r\\n{/await}\\r\\n\\r\\n<style>ul{margin:0 0 1em;line-height:1.5}h2:before{display:block;content:\\" \\";margin-top:-185px;height:185px;visibility:hidden;pointer-events:none}</style>\\r\\n"],"names":[],"mappings":"AAmIO,iBAAE,CAAC,OAAO,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,YAAY,GAAG,CAAC,iBAAE,OAAO,CAAC,QAAQ,KAAK,CAAC,QAAQ,GAAG,CAAC,WAAW,MAAM,CAAC,OAAO,KAAK,CAAC,WAAW,MAAM,CAAC,eAAe,IAAI,CAAC"}'
+  map: '{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script context=\\"module\\">\\r\\n\\t// export const prerender = true;\\r\\n\\r\\n  import { GRAPHQL_URI } from \\"../../lib/config\\";\\r\\n  import { GET_DOCS } from \\"../../lib/graphql/requests\\";\\r\\n  console.log(GRAPHQL_URI);\\r\\n\\r\\n  /**\\r\\n   * @type {import(\'@sveltejs/kit\').Load}\\r\\n   */\\r\\n  export async function load() {\\r\\n    let items;\\r\\n    try {\\r\\n      const res = await fetch(`${GRAPHQL_URI}`, {\\r\\n        method: \\"POST\\",\\r\\n        headers: {\\r\\n          \\"Content-Type\\": \\"application/json\\",\\r\\n        },\\r\\n        body: JSON.stringify({ query: GET_DOCS }),\\r\\n      });\\r\\n\\r\\n      items = await res.json();\\r\\n      items = items.data.documentations;\\r\\n      console.log(items.data.documentations)\\r\\n    } catch (e) {\\r\\n      console.log(e.message);\\r\\n    }\\r\\n\\r\\n    return {\\r\\n      props: {\\r\\n        items,\\r\\n      },\\r\\n    };\\r\\n  }\\r\\n\\r\\n  let promise = load();\\r\\n<\/script>\\r\\n\\r\\n<script>\\r\\n  import snarkdown from \\"snarkdown\\";\\r\\n  import OpenGraph from \\"$lib/components/open-graph.svelte\\";\\r\\n\\r\\n  export let items;\\r\\n\\r\\n  function phoneNav() {\\r\\n    var item = document.getElementById(\\"p-nav\\");\\r\\n\\r\\n    item.classList.toggle(\\"hidden\\");\\r\\n  }\\r\\n<\/script>\\r\\n\\r\\n<OpenGraph\\r\\n  description=\\"Documentation for Digital Business Keys to explain core concepts such as DNS, Domain Names, Domain Hosts, Emails and more\\"\\r\\n  title=\\"Digital Business Keys - Documentation\\"\\r\\n  type=\\"website\\"\\r\\n/>\\r\\n\\r\\n{#await promise}\\r\\n\\r\\n  <p>...loading</p>\\r\\n{:then data}\\r\\n  <div class=\\"flex md:flex-row-reverse flex-wrap z-10 w-full max-w-8xl\\">\\r\\n    <div\\r\\n      id=\\"p-nav\\"\\r\\n      class=\\"hidden lg:flex lg:overflow-auto md:overflow-auto w-full md:w-1/5 bg-gray-900 px-2 text-center fixed md:bottom-10 md:pt-8 md:top-20 md:left-0 h-16 sm:h-full md:h-3/6 md:border-r-4 md:border-gray-600\\"\\r\\n    >\\r\\n      <div class=\\"md:relative mx-auto lg:float-right lg:px-6\\">\\r\\n        <ul\\r\\n          class=\\"m-2 p-6 bg-gray-200 rounded  max-h-screen list-reset lg:flex md:flex flex-column md:flex-col text-center md:text-left mt-20\\"\\r\\n        >\\r\\n          {#each items as doc}\\r\\n            <div\\r\\n              class=\\"lg:flex-none flex w-full md:max-w-xs bg-purple text-black\\"\\r\\n            >\\r\\n              <li class=\\"text-black pb-2\\">\\r\\n                <p class=\\"hover:bg-indigo-500 text-black\\">\\r\\n                  <a\\r\\n                    on:click={phoneNav}\\r\\n                    class=\\"text-black\\"\\r\\n                    rel=\\"prefetch\\"\\r\\n                    href=\\"docs#{doc.Slug}\\">{doc.title}</a\\r\\n                  >\\r\\n                </p>\\r\\n              </li>\\r\\n            </div>\\r\\n          {/each}\\r\\n        </ul>\\r\\n      </div>\\r\\n    </div>\\r\\n\\r\\n    <div class=\\"w-full md:w-4/5\\">\\r\\n      <h1\\r\\n        class=\\"z-0 sm:text-3xl text-2xl font-medium title-font text-gray-50 px-6 \\"\\r\\n      >\\r\\n        Documentation\\r\\n      </h1>\\r\\n      <div class=\\"container pt-12 px-6\\">\\r\\n        {#each items as doc}\\r\\n          <div id={doc.Slug} class=\\"mb-12 overflow-auto\\r\\n                    \\">\\r\\n            <h2 class=\\"pb-10\\">{doc.title}</h2>\\r\\n\\r\\n            <article class=\\"prose prose-indigo lg:prose-xl\\">\\r\\n              {@html snarkdown(doc.content)}\\r\\n            </article>\\r\\n          </div>\\r\\n        {/each}\\r\\n      </div>\\r\\n    </div>\\r\\n    <button\\r\\n      on:click={phoneNav}\\r\\n      class=\\"fixed z-50 bottom-4 right-4 w-16 h-16 rounded-full bg-gray-900 text-white block lg:hidden\\"\\r\\n    >\\r\\n      <svg\\r\\n        width=\\"24\\"\\r\\n        height=\\"24\\"\\r\\n        fill=\\"none\\"\\r\\n        class=\\"absolute top-1/2 left-1/2 -mt-3 -ml-3 transition duration-300 transform\\"\\r\\n        ><path\\r\\n          d=\\"M4 8h16M4 16h16\\"\\r\\n          stroke=\\"currentColor\\"\\r\\n          stroke-width=\\"2\\"\\r\\n          stroke-linecap=\\"round\\"\\r\\n          stroke-linejoin=\\"round\\"\\r\\n        /></svg\\r\\n      >\\r\\n    </button>\\r\\n\\r\\n  </div>\\r\\n{/await}\\r\\n\\r\\n<style>ul{margin:0 0 1em;line-height:1.5}h2:before{display:block;content:\\" \\";margin-top:-185px;height:185px;visibility:hidden;pointer-events:none}</style>\\r\\n"],"names":[],"mappings":"AAmIO,iBAAE,CAAC,OAAO,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,YAAY,GAAG,CAAC,iBAAE,OAAO,CAAC,QAAQ,KAAK,CAAC,QAAQ,GAAG,CAAC,WAAW,MAAM,CAAC,OAAO,KAAK,CAAC,WAAW,MAAM,CAAC,eAAe,IAAI,CAAC"}'
 };
 console.log(GRAPHQL_URI);
 async function load$1() {
@@ -3570,8 +3727,8 @@ async function load$1() {
   try {
     const res = await fetch(`${GRAPHQL_URI}`, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({query: GET_DOCS})
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: GET_DOCS })
     });
     items = await res.json();
     items = items.data.documentations;
@@ -3579,11 +3736,11 @@ async function load$1() {
   } catch (e) {
     console.log(e.message);
   }
-  return {props: {items}};
+  return { props: { items } };
 }
 var promise = load$1();
 var Docs = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {items} = $$props;
+  let { items } = $$props;
   if ($$props.items === void 0 && $$bindings.items && items !== void 0)
     $$bindings.items(items);
   $$result.css.add(css);
@@ -3609,7 +3766,7 @@ ${function(__value) {
       </h1>
       <div class="${"container pt-12 px-6"}">${each(items, (doc) => `<div${add_attribute("id", doc.Slug, 0)} class="${"mb-12 overflow-auto\r\n                    "}"><h2 class="${"pb-10 svelte-1kgxi19"}">${escape2(doc.title)}</h2>
 
-            <article class="${"prose prose-indigo lg:prose-xl"}">${(0, import_snarkdown.default)(doc.content)}</article>
+            <article class="${"prose prose-indigo lg:prose-xl"}"><!-- HTML_TAG_START -->${(0, import_snarkdown.default)(doc.content)}<!-- HTML_TAG_END --></article>
           </div>`)}</div></div>
     <button class="${"fixed z-50 bottom-4 right-4 w-16 h-16 rounded-full bg-gray-900 text-white block lg:hidden"}"><svg width="${"24"}" height="${"24"}" fill="${"none"}" class="${"absolute top-1/2 left-1/2 -mt-3 -ml-3 transition duration-300 transform"}"><path d="${"M4 8h16M4 16h16"}" stroke="${"currentColor"}" stroke-width="${"2"}" stroke-linecap="${"round"}" stroke-linejoin="${"round"}"></path></svg></button></div>
 `;
@@ -3619,26 +3776,26 @@ ${function(__value) {
 var index = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: Docs,
+  "default": Docs,
   load: load$1
 });
 var prerender = true;
-async function load({page: page2, fetch: fetch22}) {
+async function load({ page: page2, fetch: fetch22 }) {
   const res = await fetch22(`${GRAPHQL_URI}`, {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({query: GET_DOCS})
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: GET_DOCS })
   });
   const items = await res.json();
   if (items) {
     const pagename = page2.path;
     console.log(items.data);
     items.data.documentations = items.data.documentations.filter((doc) => pagename.includes(doc.Slug));
-    return {pagedata: items.data.documentations[0]};
+    return { pagedata: items.data.documentations[0] };
   }
 }
 var U5Bslugu5D = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let {pagedata} = $$props;
+  let { pagedata } = $$props;
   if ($$props.pagedata === void 0 && $$bindings.pagedata && pagedata !== void 0)
     $$bindings.pagedata(pagedata);
   return `${validate_component(Open_graph, "OpenGraph").$$render($$result, {
@@ -3652,29 +3809,37 @@ var U5Bslugu5D = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 
 <h1 class="${"sm:text-3xl text-2xl font-medium title-font text-gray-50"}">${escape2(pagedata.title)}</h1>
 
-<div>${(0, import_snarkdown.default)(pagedata.content)}</div>`;
+<div><!-- HTML_TAG_START -->${(0, import_snarkdown.default)(pagedata.content)}<!-- HTML_TAG_END --></div>`;
 });
 var _slug_ = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   [Symbol.toStringTag]: "Module",
-  default: U5Bslugu5D,
+  "default": U5Bslugu5D,
   prerender,
   load
 });
 
 // .svelte-kit/vercel/entry.js
+init();
 var entry_default = async (req, res) => {
-  const {pathname, searchParams} = new URL(req.url || "", "http://localhost");
+  const { pathname, searchParams } = new URL(req.url || "", "http://localhost");
+  let body;
+  try {
+    body = await getRawBody(req);
+  } catch (err) {
+    res.statusCode = err.status || 400;
+    return res.end(err.reason || "Invalid request body");
+  }
   const rendered = await render({
     method: req.method,
     headers: req.headers,
     path: pathname,
     query: searchParams,
-    rawBody: await getRawBody(req)
+    rawBody: body
   });
   if (rendered) {
-    const {status, headers, body} = rendered;
-    return res.writeHead(status, headers).end(body);
+    const { status, headers, body: body2 } = rendered;
+    return res.writeHead(status, headers).end(body2);
   }
   return res.writeHead(404).end();
 };

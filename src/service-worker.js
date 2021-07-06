@@ -1,50 +1,52 @@
-import { timestamp, build } from "$service-worker";
+// based on https://github.com/tretapey/svelte-pwa/blob/master/public/service-worker.js
+import { build, files, timestamp } from '$service-worker';
 
-const name = `cache-${timestamp}`;
+const worker = self;
+const CACHE_NAME = `static-cache-${timestamp}`;
 
-console.log("build", build);
+const to_cache = build.concat(files);
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(name).then((cache) => cache.addAll(build)));
-});
+worker.addEventListener('install', (event) => {
+  console.log('[ServiceWorker] Install');
 
-self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then(async (keys) => {
-      for (const key of keys) {
-        if (!key.includes(timestamp)) caches.delete(key);
-      }
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[ServiceWorker] Pre-caching offline page');
+      return cache.addAll(to_cache).then(() => {
+        worker.skipWaiting();
+      });
     })
   );
 });
 
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
+worker.addEventListener('activate', (event) => {
+  console.log('[ServiceWorker] Activate');
+  // Remove previous cached data from disk
+  event.waitUntil(
+    caches.keys().then(async (keys) =>
+      Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('[ServiceWorker] Removing old cache', key);
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+  worker.clients.claim();
+});
 
-  if (request.method !== "GET" || request.headers.has("range")) return;
-
-  const url = new URL(request.url);
-  const cached = caches.match(request);
-
-  if (url.origin === location.origin && build.includes(url.pathname)) {
-    // always return build files from cache
-    event.respondWith(cached);
-  } else if (url.protocol === "https:" || location.hostname === "localhost") {
-    // hit the network for everything else...
-    const promise = fetch(request);
-
-    // ...and cache successful responses...
-    promise.then((response) => {
-      // cache successful responses
-      if (response.ok && response.type === "basic") {
-        const clone = response.clone();
-        caches.open(name).then((cache) => {
-          cache.put(request, clone);
-        });
-      }
-    });
-
-    // ...but if it fails, fall back to cache if available
-    event.respondWith(promise.catch(() => cached || promise));
+self.addEventListener('fetch', (event) => {
+  console.log('[ServiceWorker] Fetch', event.request.url);
+  if (event.request.mode !== 'navigate') {
+    return;
   }
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.open(CACHE_NAME).then((cache) => {
+        return cache.match('offline.html');
+      });
+    })
+  );
 });

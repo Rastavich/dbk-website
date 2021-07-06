@@ -1,7 +1,7 @@
-import cookie from "cookie";
+import cookie from 'cookie';
 
-export async function handle({ request, render }) {
-  const cookies = await cookie.parse(request.headers.cookie || "");
+export async function handle({ request, resolve }) {
+  const cookies = await cookie.parse(request.headers.cookie || '');
   let user;
   // console.log("Cookies :", cookies);
 
@@ -10,15 +10,15 @@ export async function handle({ request, render }) {
   }
 
   const jwt = cookies.jwt;
-  request.locals.user = user || "";
-  request.locals.jwt = jwt || "";
+  request.locals.user = user || '';
+  request.locals.jwt = jwt || '';
 
   // console.log("Req local user :", request.locals.user);
-  if (request.query.has("_method")) {
-    request.method = request.query.get("_method").toUpperCase();
+  if (request.query.has('_method')) {
+    request.method = request.query.get('_method').toUpperCase();
   }
 
-  const response = await render(request);
+  const response = await resolve(request);
 
   // const user = JSON.parse( request.locals.jwt)
   // console.log("Response: ", response);
