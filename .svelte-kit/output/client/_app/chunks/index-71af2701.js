@@ -1,1 +1,10 @@
-const n="\n  {\n    documentations {\n      id\n      title\n      Slug\n      content\n    }\n  }\n";const t="https://api.digitalbk.app/graphql";export{t as G,n as a};
+const a=`
+  {
+    documentations {
+      id
+      title
+      Slug
+      content
+    }
+  }
+`;let t="https://api.digitalbk.app";const i=`${t}/graphql`;export{i as G,a};

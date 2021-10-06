@@ -1,6 +1,6 @@
 import cookie from "cookie";
 
-export async function handle({ request, render }) {
+export async function handle({ request, resolve }) {
   const cookies = await cookie.parse(request.headers.cookie || "");
   let user;
   // console.log("Cookies :", cookies);
@@ -18,7 +18,7 @@ export async function handle({ request, render }) {
     request.method = request.query.get("_method").toUpperCase();
   }
 
-  const response = await render(request);
+  const response = await resolve(request);
 
   // const user = JSON.parse( request.locals.jwt)
   // console.log("Response: ", response);
