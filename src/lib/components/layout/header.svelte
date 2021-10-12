@@ -43,11 +43,11 @@
     </button>
   </div>
   <div
-    class="w-full block flex-grow lg:flex lg:items-center md:items-center lg:w-auto z-50 md:text-center lg:text-center"
+    class="block flex-grow lg:flex lg:items-center md:items-center w-auto z-50 lg:text-center"
   >
     <div
       id="hidden-menu"
-      class="text-sm lg:flex-grow hidden lg:block md:items-center lg:items-center md:text-center lg:text-center"
+      class="text-sm lg:flex-grow hidden lg:block md:items-center lg:items-center lg:text-center sm:mb-5 sm:w-auto"
     >
       <a href="/docs" rel="prefetch" class="nav-link" on:click={toggleMenu}
         >Docs</a
@@ -62,7 +62,7 @@
         <Button text="Logout" href="/logout" clickEvent={toggleMenu} />
       </div>
     {:else}
-      <div id="hidden-menubtn" class="hidden lg:block">
+      <div id="hidden-menubtn" class="hidden lg:block ">
         <Button text="Sign Up" href="/signup" clickEvent={toggleMenu} />
         <Button text="Sign In" href="/login" clickEvent={toggleMenu} />
       </div>

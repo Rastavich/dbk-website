@@ -40,9 +40,9 @@
         <div
           class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left"
         >
-          <Button text="Try Free!" href="signup" />
+          <Button text="Try Free!" href="/signup" />
 
-          <Button text="Sign In" href="login" />
+          <Button text="Sign In" href="/login" />
         </div>
       {/if}
     </div>
