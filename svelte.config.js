@@ -1,6 +1,6 @@
 import sveltePreprocess from 'svelte-preprocess';
-// import vercel from "@sveltejs/adapter-vercel";
-import adapter from '@sveltejs/adapter-static';
+import adapter from "@sveltejs/adapter-vercel";
+// import adapter from '@sveltejs/adapter-static';
 // const pkg = require("./package.json");
 
 /** @type {import('@sveltejs/kit').Config} */
