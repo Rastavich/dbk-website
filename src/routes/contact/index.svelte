@@ -1,11 +1,28 @@
 <script context="module">
-	// export const prerender = true;
+  // export const prerender = true;
 </script>
 
 <script>
-  import Button from "$lib/components/generics/button.svelte";
+  import Button from '$lib/components/generics/button.svelte';
+  import { NOTION_URI, NOTION_TOKEN } from '$lib/config/index.js';
+  import Error from '../__error.svelte';
 
-  function submit() {}
+  function submit(data) {
+    if (data) {
+      let opts = {};
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(data);
+      opts.headers['Authorization'] = `Token ${NOTION_TOKEN}`;
+
+      fetch(NOTION_URI, opts)
+        .then((r) => {
+          return r.text();
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
+    }
+  }
 </script>
 
 <section class="text-white-500 body-font relative">
@@ -79,7 +96,7 @@
           </div>
         </div>
         <div class="p-2 w-full">
-          <Button clickEvent={submit} href="/">Submit</Button>
+          <Button clickEvent={submit} href="" text="Submit" />
         </div>
         <div class="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
           <a
