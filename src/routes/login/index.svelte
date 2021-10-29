@@ -34,7 +34,7 @@
       console.log(err);
     });
 
-    if (response.user != undefined) {
+    if (response.user != undefined || null) {
       $session.user = response.user;
       $session.jwt = response.jwt;
       goto('/dashboard');

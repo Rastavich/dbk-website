@@ -25,9 +25,9 @@
 		Digital business keys is a critical app developed to empower businesses
 		to take control of their digital business assets and respond to issues
 		that can commonly impact website availability, email receiving and
-		sending and digital project assets. Digital Business Keys app provides a
+		sending, and digital project assets. Digital Business Keys app provides a
 		service that has long been neglect by business owners and the industries
-		that assist them in taking their businesses online Designed to be as
+		that assist them in taking their businesses online. Designed to be as
 		simple as possible to allow any level of user to get the critical
 		control they need for the digital presence of their business.
 	</p>

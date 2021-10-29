@@ -18,27 +18,30 @@
   import { GRAPHQL_URI } from '../../lib/config';
   import { GET_WEBSITES } from '../../lib/graphql/requests';
   import { post } from '$lib/api.js';
+  import { digitalAsset } from '$lib/assetStore';
   export let user;
   export let jwt;
   let items;
-  console.log(jwt);
-  // If there is a valid user and jwt then fetch the users digital assets from the api using the jwt token.
+
   async function getUserDigitalAssets() {
-    
+    // Get from store before calling API again
+    if ($digitalAsset) {
+      items = $digitalAsset;
+      return items;
+    }
+
     if (user && jwt) {
-      console.log('Request JWT', jwt);
       const res = await post(GRAPHQL_URI, JSON.parse(GET_WEBSITES), jwt)
         .then((res) => {
           items = res.data.digitalAssets;
-          console.log(items);
         })
         .catch((error) => console.log(error));
     }
+    digitalAsset.set(items);
     return items;
   }
-
+  
   let promise = getUserDigitalAssets();
-  console.log(promise);
 </script>
 
 <!-- component -->
@@ -66,6 +69,16 @@
             href="#"
             class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
             >Settings</a
+          >
+          <a
+            href="#"
+            class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
+            >Account</a
+          >
+          <a
+            href="#"
+            class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
+            >Billing</a
           >
         </nav>
       </div>
@@ -108,11 +121,8 @@
                 <p>Loading...</p>
               {:then data}
                 {#each items as item}
-                  <UserAssetCard
-                    digitalAsset={item}
-                  />
+                  <UserAssetCard digitalAsset={item} />
                 {/each}
-               
               {/await}
             </div>
           </div>
