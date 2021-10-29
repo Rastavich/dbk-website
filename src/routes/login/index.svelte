@@ -24,17 +24,19 @@
 
   async function handleLogin(event) {
     loading = true;
-    const response = await post(`auth/login`, { email, password }).catch(
-      (err) => {
-        loading = false;
-        loginBtnTxt = 'Login';
-        loginError = true;
-        console.log(err);
-      }
-    );
+    const response = await post(`auth/login`, {
+      email,
+      password,
+    }).catch((err) => {
+      loading = false;
+      loginBtnTxt = 'Login';
+      loginError = true;
+      console.log(err);
+    });
 
     if (response.user != undefined) {
       $session.user = response.user;
+      $session.jwt = response.jwt;
       goto('/dashboard');
     }
   }

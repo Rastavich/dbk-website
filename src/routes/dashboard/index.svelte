@@ -1,22 +1,44 @@
 <script context="module">
-  export function load({ session }) {
-    const { user } = session;
-    console.log('Session Dashboard:', session);
-    if (!user) {
+  export async function load({ session }) {
+    let { user, jwt } = session;
+    if (user === null && jwt === null) {
       return {
         status: 302,
-        redirect: "/login",
+        redirect: '/login',
       };
     }
-    return {
-      props: { user },
+    return await {
+      props: { user, jwt },
     };
   }
 </script>
 
 <script>
-  import UserAssetCard from "$lib/components/dashboard/user-asset-card.svelte";
+  import UserAssetCard from '$lib/components/dashboard/user-asset-card.svelte';
+  import { GRAPHQL_URI } from '../../lib/config';
+  import { GET_WEBSITES } from '../../lib/graphql/requests';
+  import { post } from '$lib/api.js';
   export let user;
+  export let jwt;
+  let items;
+  console.log(jwt);
+  // If there is a valid user and jwt then fetch the users digital assets from the api using the jwt token.
+  async function getUserDigitalAssets() {
+    
+    if (user && jwt) {
+      console.log('Request JWT', jwt);
+      const res = await post(GRAPHQL_URI, JSON.parse(GET_WEBSITES), jwt)
+        .then((res) => {
+          items = res.data.digitalAssets;
+          console.log(items);
+        })
+        .catch((error) => console.log(error));
+    }
+    return items;
+  }
+
+  let promise = getUserDigitalAssets();
+  console.log(promise);
 </script>
 
 <!-- component -->
@@ -70,7 +92,7 @@
 
             <div>
               <h1 class="text-2xl font-medium text-white">
-                Welcome {user.username}
+                Welcome {user.legalName}
               </h1>
             </div>
           </div>
@@ -81,7 +103,17 @@
             <div
               class="grid place-items-center h-96 text-gray-300 text-xl border-4 border-gray-300 border-dashed"
             >
-              <UserAssetCard {user} />
+              <!-- pass the user.digital_assets array as a prop to user assets card-->
+              {#await promise}
+                <p>Loading...</p>
+              {:then data}
+                {#each items as item}
+                  <UserAssetCard
+                    digitalAsset={item}
+                  />
+                {/each}
+               
+              {/await}
             </div>
           </div>
         </main>

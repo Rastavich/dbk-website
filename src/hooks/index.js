@@ -5,7 +5,7 @@ export async function handle({ request, resolve }) {
   const jwt = await cookies.jwt;
 
   let user;
-  console.log('Cookies :', cookies);
+  // console.log('Cookies :', cookies);
 
   if (cookies.user) {
     user = JSON.parse(cookies.user);
@@ -32,7 +32,7 @@ export async function handle({ request, resolve }) {
 }
 
 export function getSession(request) {
-  // console.log("Request Session: ", request);
+  // console.log('Request Session: ', request);
 
   return {
     user: request.locals.user && {
