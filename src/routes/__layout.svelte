@@ -1,11 +1,13 @@
 <script>
-  import "../global.css";
-  import Footer from "$lib/components/layout/footer.svelte";
-  import Header from "$lib/components/layout/header.svelte";
+  import '../global.css';
+  import Footer from '$lib/components/layout/footer.svelte';
+  import Header from '$lib/components/layout/header.svelte';
 </script>
 
-<Header />
+<main>
+  <Header />
 
-<slot />
+  <slot />
 
-<Footer />
+  <Footer />
+</main>
