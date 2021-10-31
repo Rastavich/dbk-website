@@ -2,7 +2,7 @@
   let date = new Date().getFullYear();
 </script>
 
-<footer class="text-gray-300 body-font hover:text-indigo-500">
+<footer class="text-gray-300 body-font hover:text-indigo-500 w-full">
   <div
     class="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col"
   >

@@ -4,10 +4,11 @@
   import Header from '$lib/components/layout/header.svelte';
 </script>
 
-<main>
+<!-- Center the main tag -->
+<div class="w-full">
   <Header />
-
-  <slot />
-
+  <main>
+    <slot />
+  </main>
   <Footer />
-</main>
+</div>

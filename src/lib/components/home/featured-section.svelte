@@ -1,5 +1,5 @@
 <section class="text-gray-600 body-font">
-  <div class="container px-5 py-24 mx-auto">
+  <div class="container px-5 py-24 sm:py-10 mx-auto">
     <div class="flex flex-col text-center w-full mb-20">
       <h2
         class="text-xs text-indigo-300 tracking-widest font-medium title-font mb-1"
@@ -11,7 +11,7 @@
       </h1>
     </div>
     <div class="flex flex-wrap -m-4">
-      <div class="p-4 md:w-1/3">
+      <div class="p-4 sm:p-1 md:w-1/3">
         <div class="flex rounded-lg h-full bg-gray-100 p-8 flex-col">
           <div class="flex items-center mb-3">
             <div

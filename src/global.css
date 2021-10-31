@@ -9,7 +9,7 @@
 }
 
 section {
-  @apply px-8 py-16 mx-auto max-w-5xl text-center;
+  @apply px-8 py-16 sm:py-5 mx-auto text-center;
 }
 
 body {
@@ -18,7 +18,7 @@ body {
 }
 
 button {
-  @apply py-2 px-8 rounded border border-gray-500;
+  @apply py-2 px-5 rounded border border-gray-500;
   @apply border-gray-600 shadow-md;
   @apply outline-none;
 }
