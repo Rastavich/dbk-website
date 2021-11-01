@@ -36,6 +36,17 @@
 
 <!-- Center the main tag -->
 <div class="w-full">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript
+    ><iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-59ZQVXC"
+      height="0"
+      width="0"
+      style="display:none;visibility:hidden"
+    /></noscript
+  >
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- Test -->
   <Header />
   <main>
     <slot />
