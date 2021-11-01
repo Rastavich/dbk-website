@@ -171,8 +171,8 @@ async function consumeBody(data) {
         return Buffer.from(accum.join(""));
       }
       return Buffer.concat(accum, accumBytes);
-    } catch (error2) {
-      throw new FetchError(`Could not create Buffer from response body for ${data.url}: ${error2.message}`, "system", error2);
+    } catch (error3) {
+      throw new FetchError(`Could not create Buffer from response body for ${data.url}: ${error3.message}`, "system", error3);
     }
   } else {
     throw new FetchError(`Premature close of server response while trying to fetch ${data.url}`);
@@ -5304,8 +5304,8 @@ async function render_response({
   let rendered;
   let is_private = false;
   let maxage;
-  if (error2) {
-    error2.stack = options2.get_stack(error2);
+  if (error3) {
+    error3.stack = options2.get_stack(error3);
   }
   if (page_config.ssr) {
     branch.forEach(({ node, loaded, fetched, uses_credentials }) => {
@@ -5367,8 +5367,8 @@ async function render_response({
 			start({
 				target: ${options2.target ? `document.querySelector(${s$1(options2.target)})` : "document.body"},
 				paths: ${s$1(options2.paths)},
-				session: ${try_serialize($session, (error3) => {
-      throw new Error(`Failed to serialize session data: ${error3.message}`);
+				session: ${try_serialize($session, (error4) => {
+      throw new Error(`Failed to serialize session data: ${error4.message}`);
     })},
 				host: ${page2 && page2.host ? s$1(page2.host) : "location.host"},
 				route: ${!!page_config.router},
@@ -5376,7 +5376,7 @@ async function render_response({
 				trailing_slash: ${s$1(options2.trailing_slash)},
 				hydrate: ${page_config.ssr && page_config.hydrate ? `{
 					status: ${status},
-					error: ${serialize_error(error2)},
+					error: ${serialize_error(error3)},
 					nodes: [
 						${(branch || []).map(({ node }) => `import(${s$1(node.entry)})`).join(",\n						")}
 					],
@@ -5436,10 +5436,10 @@ function try_serialize(data, fail) {
     return null;
   }
 }
-function serialize_error(error2) {
-  if (!error2)
+function serialize_error(error3) {
+  if (!error3)
     return null;
-  let serialized = try_serialize(error2);
+  let serialized = try_serialize(error3);
   if (!serialized) {
     const { name, message, stack } = error2;
     serialized = try_serialize({ ...error2, name, message, stack });
@@ -5463,7 +5463,7 @@ function normalize(loaded) {
     if (!(error2 instanceof Error)) {
       return {
         status: 500,
-        error: new Error(`"error" property returned from load() must be a string or instance of Error, received type "${typeof error2}"`)
+        error: new Error(`"error" property returned from load() must be a string or instance of Error, received type "${typeof error3}"`)
       };
     }
     if (!status || status < 400 || status > 599) {
@@ -5505,7 +5505,7 @@ async function load_node({
   is_leaf,
   is_error,
   status,
-  error: error2
+  error: error3
 }) {
   const { module: module2 } = node;
   let uses_credentials = false;
@@ -5652,7 +5652,7 @@ async function load_node({
     };
     if (is_error) {
       load_input.status = status;
-      load_input.error = error2;
+      load_input.error = error3;
     }
     loaded = await module2.load.call(null, load_input);
   } else {
@@ -5731,7 +5731,7 @@ async function respond_with_error({ request, options: options2, state, $session,
       is_leaf: false,
       is_error: true,
       status,
-      error: error2
+      error: error3
     })
   ];
   try {
@@ -5744,7 +5744,7 @@ async function respond_with_error({ request, options: options2, state, $session,
         ssr: options2.ssr
       },
       status,
-      error: error2,
+      error: error3,
       branch,
       page: page2
     });
@@ -5754,7 +5754,7 @@ async function respond_with_error({ request, options: options2, state, $session,
     return {
       status: 500,
       headers: {},
-      body: error3.stack
+      body: error4.stack
     };
   }
 }
@@ -5775,7 +5775,7 @@ async function respond$1(opts) {
       state,
       $session,
       status: 500,
-      error: error3
+      error: error4
     });
   }
   const leaf = nodes[nodes.length - 1].module;
@@ -5825,7 +5825,7 @@ async function respond$1(opts) {
             const e = coalesce_to_error(err);
             options2.handle_error(e, request);
             status = 500;
-            error2 = e;
+            error3 = e;
           }
           if (loaded && !error2) {
             branch.push(loaded);
@@ -5848,7 +5848,7 @@ async function respond$1(opts) {
                     is_leaf: false,
                     is_error: true,
                     status,
-                    error: error2
+                    error: error3
                   });
                   if (error_loaded.loaded.error) {
                     continue;
@@ -6098,6 +6098,7 @@ async function respond$2(incoming, options2, state = {}) {
     locals: {}
   };
   try {
+    const headers = lowercase_keys(incoming.headers);
     return await options2.hooks.handle({
       request,
       resolve: async (request2) => {
@@ -6818,8 +6819,8 @@ var _error = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { error: error2 } = $$props;
   if ($$props.status === void 0 && $$bindings.status && status !== void 0)
     $$bindings.status(status);
-  if ($$props.error === void 0 && $$bindings.error && error2 !== void 0)
-    $$bindings.error(error2);
+  if ($$props.error === void 0 && $$bindings.error && error22 !== void 0)
+    $$bindings.error(error22);
   return `<div class="${"error-page row"}">${validate_component(Section, "Section").$$render($$result, {}, {}, {
     default: () => `<img src="${"/images/illustration-large.jpg"}" alt="${"Digital Business Keys"}">
     <h1>${escape(status)}</h1>

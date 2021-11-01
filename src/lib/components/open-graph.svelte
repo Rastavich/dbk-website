@@ -1,10 +1,10 @@
 <script>
   import { page } from '$app/stores';
 
-  export let description;
-  export let image;
-  export let title;
-  export let type;
+  export let description = null;
+  export let image = null;
+  export let title = null;
+  export let type = null;
 
   const url = `https://${$page.host}${$page.path}`;
 </script>

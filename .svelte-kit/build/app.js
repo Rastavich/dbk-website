@@ -2,7 +2,7 @@ import { respond } from '@sveltejs/kit/ssr';
 import root from './generated/root.svelte';
 import { set_paths, assets } from './runtime/paths.js';
 import { set_prerendering } from './runtime/env.js';
-import * as user_hooks from "../../src/hooks/index.js";
+import * as user_hooks from "..\\..\\src\\hooks\\index.js";
 
 const template = ({ head, body }) => "<!DOCTYPE html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<link rel=\"icon\" href=\"/favicon.ico\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div id=\"svelte\">" + body + "</div>\n\t</body>\n</html>\n";
 
@@ -162,13 +162,13 @@ const manifest = {
 						type: 'endpoint',
 						pattern: /^\/auth\/logout\/?$/,
 						params: empty,
-						load: () => import("../../src/routes/auth/logout.js")
+						load: () => import("..\\..\\src\\routes\\auth\\logout.js")
 					},
 		{
 						type: 'endpoint',
 						pattern: /^\/auth\/login\/?$/,
 						params: empty,
-						load: () => import("../../src/routes/auth/login.js")
+						load: () => import("..\\..\\src\\routes\\auth\\login.js")
 					},
 		{
 						type: 'page',

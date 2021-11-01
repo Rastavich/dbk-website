@@ -57,11 +57,9 @@ export const routes = [
 	// src/routes/login/index.svelte
 	[/^\/login\/?$/, [c[0], c[13]], [c[1]]],
 
-	// src/routes/auth/logout.js
-	[/^\/auth\/logout\/?$/],
+	,
 
-	// src/routes/auth/login.js
-	[/^\/auth\/login\/?$/],
+	,
 
 	// src/routes/blog/index.svelte
 	[/^\/blog\/?$/, [c[0], c[14]], [c[1]]],

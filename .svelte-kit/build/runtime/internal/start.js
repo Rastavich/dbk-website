@@ -171,6 +171,11 @@ class Router {
 		return url.origin === location.origin && url.pathname.startsWith(this.base);
 	}
 
+	/** @param {URL} url */
+	owns(url) {
+		return url.origin === location.origin && url.pathname.startsWith(this.base);
+	}
+
 	/**
 	 * @param {URL} url
 	 * @returns {import('./types').NavigationInfo | undefined}
@@ -290,6 +295,20 @@ function coalesce_to_error(err) {
  * Hash using djb2
  * @param {import('types/hooks').StrictBody} value
  */
+function hash(value) {
+	let hash = 5381;
+	let i = value.length;
+
+	if (typeof value === 'string') {
+		while (i) hash = (hash * 33) ^ value.charCodeAt(--i);
+	} else {
+		while (i) hash = (hash * 33) ^ value[--i];
+	}
+
+	return (hash >>> 0).toString(36);
+}
+
+/** @param {import('types/hooks').StrictBody} value */
 function hash(value) {
 	let hash = 5381;
 	let i = value.length;
