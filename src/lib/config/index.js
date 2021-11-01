@@ -1,9 +1,11 @@
-import { dev } from "$app/env";
+import { dev } from '$app/env';
 
-let uri = "https://api.digitalbk.app";
+let uri = 'https://api.digitalbk.app';
 if (dev) {
-  uri = "http://172.23.75.163:1337";
+  uri = 'http://192.168.20.26:1337';
 }
 
 export const BASE_LOGIN_URI = `${uri}/auth/local`;
 export const GRAPHQL_URI = `${uri}/graphql`;
+export const NOTION_URI = '';
+export const NOTION_TOKEN = '';

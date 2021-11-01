@@ -1,8 +1,8 @@
 <script context="module">
-	// export const prerender = true;
+  // export const prerender = true;
 
-  import { GRAPHQL_URI } from "../../lib/config";
-  import { GET_DOCS } from "../../lib/graphql/requests";
+  import { GRAPHQL_URI } from '../../lib/config';
+  import { GET_DOCS } from '../../lib/graphql/requests';
   console.log(GRAPHQL_URI);
 
   /**
@@ -12,16 +12,16 @@
     let items;
     try {
       const res = await fetch(`${GRAPHQL_URI}`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ query: GET_DOCS }),
       });
 
       items = await res.json();
       items = items.data.documentations;
-      console.log(items.data.documentations)
+      console.log(items.data.documentations);
     } catch (e) {
       console.log(e.message);
     }
@@ -37,15 +37,15 @@
 </script>
 
 <script>
-  import snarkdown from "snarkdown";
-  import OpenGraph from "$lib/components/open-graph.svelte";
+  import snarkdown from 'snarkdown';
+  import OpenGraph from '$lib/components/open-graph.svelte';
 
   export let items;
 
   function phoneNav() {
-    var item = document.getElementById("p-nav");
+    var item = document.getElementById('p-nav');
 
-    item.classList.toggle("hidden");
+    item.classList.toggle('hidden');
   }
 </script>
 
@@ -53,10 +53,10 @@
   description="Documentation for Digital Business Keys to explain core concepts such as DNS, Domain Names, Domain Hosts, Emails and more"
   title="Digital Business Keys - Documentation"
   type="website"
+  image
 />
 
 {#await promise}
-
   <p>...loading</p>
 {:then data}
   <div class="flex md:flex-row-reverse flex-wrap z-10 w-full max-w-8xl">
@@ -96,8 +96,11 @@
       </h1>
       <div class="container pt-12 px-6">
         {#each items as doc}
-          <div id={doc.Slug} class="mb-12 overflow-auto
-                    ">
+          <div
+            id={doc.Slug}
+            class="mb-12 overflow-auto
+                    "
+          >
             <h2 class="pb-10">{doc.title}</h2>
 
             <article class="prose prose-indigo lg:prose-xl">
@@ -125,7 +128,6 @@
         /></svg
       >
     </button>
-
   </div>
 {/await}
 
@@ -137,7 +139,7 @@
 
   h2::before {
     display: block;
-    content: " ";
+    content: ' ';
     margin-top: -185px;
     height: 185px;
     visibility: hidden;

@@ -2,14 +2,15 @@ import cookie from 'cookie';
 
 export async function handle({ request, resolve }) {
   const cookies = await cookie.parse(request.headers.cookie || '');
+  const jwt = await cookies.jwt;
+
   let user;
-  // console.log("Cookies :", cookies);
+  // console.log('Cookies :', cookies);
 
   if (cookies.user) {
     user = JSON.parse(cookies.user);
   }
 
-  const jwt = cookies.jwt;
   request.locals.user = user || '';
   request.locals.jwt = jwt || '';
 
@@ -31,7 +32,7 @@ export async function handle({ request, resolve }) {
 }
 
 export function getSession(request) {
-  // console.log("Request Session: ", request);
+  // console.log('Request Session: ', request);
 
   return {
     user: request.locals.user && {

@@ -1,22 +1,22 @@
 <script>
-  import { session } from "$app/stores";
-  import Button from "$lib/components/generics/button.svelte";
+  import { session } from '$app/stores';
+  import Button from '$lib/components/generics/button.svelte';
   // import Href from "./generics/Href.svelte";
 
   function toggleMenu() {
-    var item = document.getElementById("hidden-menu");
-    var btn = document.getElementById("hidden-menubtn");
+    var item = document.getElementById('hidden-menu');
+    var btn = document.getElementById('hidden-menubtn');
 
-    item.classList.toggle("hidden");
-    btn.classList.toggle("hidden");
+    item.classList.toggle('hidden');
+    btn.classList.toggle('hidden');
   }
 </script>
 
 <!-- component -->
 <nav
-  class="flex justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left"
+  class="flex justify-between flex-wrap bg-teal p-6 z-50 text-right lg:text-left min-w-full w-full"
 >
-  <div class="flex items-center flex-no-shrink text-white mr-6">
+  <div class="flex flex-grow items-center flex-no-shrink text-white mr-6">
     <span class="font-semibold text-xl tracking-tight text-gray-50"
       ><a href="/"
         ><img
@@ -26,6 +26,27 @@
         /></a
       ></span
     >
+
+    <div
+      class="text-sm hidden md:hidden lg:flex md:items-center lg:items-center lg:text-center sm:mb-5 sm:w-auto lg:m-auto"
+    >
+      <a href="/docs" rel="prefetch" class="nav-link">Docs</a>
+      <a href="/features" rel="prefetch">Features</a>
+      <a href="/blog" rel="prefetch">Blog</a>
+      <a href="/contact" rel="prefetch">Contact Us</a>
+    </div>
+
+    {#if $session.user}
+      <div class="text-sm hidden md:hidden lg:flex">
+        <Button text="Dashboard" href="/dashboard" clickEvent />
+        <Button text="Logout" href="/logout" clickEvent />
+      </div>
+    {:else}
+      <div class="text-sm hidden md:hidden lg:flex">
+        <Button text="Sign Up" href="/signup" clickEvent />
+        <Button text="Sign In" href="/login" clickEvent />
+      </div>
+    {/if}
   </div>
   <div class="block lg:hidden z-50 lg:py-2">
     <button
@@ -42,33 +63,30 @@
       >
     </button>
   </div>
-  <div
-    class="w-full block flex-grow lg:flex lg:items-center md:items-center lg:w-auto z-50 md:text-center lg:text-center"
-  >
-    <div
-      id="hidden-menu"
-      class="text-sm lg:flex-grow hidden lg:block md:items-center lg:items-center md:text-center lg:text-center"
+</nav>
+
+<!-- Style div to the right side -->
+<div
+  id="hidden-menu"
+  class="hidden grid absolute inset-y-0 right-0 w-1/3 h-1/3 mt-20"
+>
+  <div class="absolute grid inset-0 bg-indigo-500 text-right rounded-lg">
+    <a href="/docs" rel="prefetch" class="nav-link" on:click={toggleMenu}
+      >Docs</a
     >
-      <a href="/docs" rel="prefetch" class="nav-link" on:click={toggleMenu}
-        >Docs</a
-      >
-      <a href="/features" rel="prefetch" on:click={toggleMenu}>Features</a>
-      <a href="/blog" rel="prefetch" on:click={toggleMenu}>Blog</a>
-      <a href="contact" rel="prefetch" on:click={toggleMenu}>Contact Us</a>
-    </div>
+    <a href="/features" rel="prefetch" on:click={toggleMenu}>Features</a>
+    <a href="/blog" rel="prefetch" on:click={toggleMenu}>Blog</a>
+    <a href="contact" rel="prefetch" on:click={toggleMenu}>Contact Us</a>
+
     {#if $session.user}
-      <div id="hidden-menubtn" class="hidden lg:block">
-        <Button text="Dashboard" href="/dashboard" clickEvent={toggleMenu} />
-        <Button text="Logout" href="/logout" clickEvent={toggleMenu} />
-      </div>
+      <Button text="Dashboard" href="/dashboard" clickEvent={toggleMenu} />
+      <Button text="Logout" href="/logout" clickEvent={toggleMenu} />
     {:else}
-      <div id="hidden-menubtn" class="hidden lg:block">
-        <Button text="Sign Up" href="/signup" clickEvent={toggleMenu} />
-        <Button text="Sign In" href="/login" clickEvent={toggleMenu} />
-      </div>
+      <Button text="Sign Up" href="/signup" clickEvent={toggleMenu} />
+      <Button text="Sign In" href="/login" clickEvent={toggleMenu} />
     {/if}
   </div>
-</nav>
+</div>
 
 <style>
   a {

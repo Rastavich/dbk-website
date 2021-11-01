@@ -1,8 +1,7 @@
-import { getRawBody } from '@sveltejs/kit/node'; // eslint-disable-line import/no-unresolved
-import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unresolved
+import { getRawBody } from '@sveltejs/kit/node';
 
 // TODO hardcoding the relative location makes this brittle
-import { init, render } from '../output/server/app.js'; // eslint-disable-line import/no-unresolved
+import { init, render } from '../output/server/app.js';
 
 init();
 

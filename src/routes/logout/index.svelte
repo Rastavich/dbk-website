@@ -5,7 +5,7 @@
     if (!user) {
       return {
         status: 302,
-        redirect: "/login",
+        redirect: '/login',
       };
     }
     return {
@@ -15,14 +15,15 @@
 </script>
 
 <script>
-  import { session } from "$app/stores";
-  import { post } from "$lib/utils.js";
-  import { onMount } from "svelte";
+  import { session } from '$app/stores';
+  import { post } from '$lib/utils.js';
+  import { onMount } from 'svelte';
 
   onMount(async () => {
     await post(`auth/logout`);
     // this will trigger a redirect, because it
     // causes the `load` function to run again
     $session.user = null;
+    $session.jwt = null;
   });
 </script>

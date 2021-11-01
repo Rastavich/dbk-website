@@ -1,13 +1,13 @@
 <script>
-  import CallToAction from "$lib/components/home/call-to-action.svelte";
-  import FeaturedSection from "$lib/components/home/featured-section.svelte";
-  import Features from "$lib/components/home/features.svelte";
-  import Pricing from "$lib/components/home/pricing.svelte";
-  import Signup from "$lib/components/home/signup.svelte";
-  import Button from "$lib/components/generics/button.svelte";
-  import OpenGraph from "$lib/components/open-graph.svelte";
+  import CallToAction from '$lib/components/home/call-to-action.svelte';
+  import FeaturedSection from '$lib/components/home/featured-section.svelte';
+  import Features from '$lib/components/home/features.svelte';
+  import Pricing from '$lib/components/home/pricing.svelte';
+  import Signup from '$lib/components/home/signup.svelte';
+  import Button from '$lib/components/generics/button.svelte';
+  import OpenGraph from '$lib/components/open-graph.svelte';
 
-  import { session } from "$app/stores";
+  import { session } from '$app/stores';
 </script>
 
 <OpenGraph
@@ -38,7 +38,7 @@
         <Button text="Dashboard" href="dashboard" />
       {:else}
         <div
-          class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left"
+          class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left m-auto md:m-0 lg:m-0"
         >
           <Button text="Try Free!" href="signup" />
 
@@ -55,8 +55,9 @@
       />
     </div>
   </div>
+
   <section
-    class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
+    class="container px-3 sm:py-1 mx-auto flex flex-wrap flex-col md:flex-row items-center"
   >
     <FeaturedSection />
     <Features />

@@ -1,22 +1,47 @@
 <script context="module">
-  export function load({ session }) {
-    const { user } = session;
-    console.log('Session Dashboard:', session);
-    if (!user) {
+  export async function load({ session }) {
+    let { user, jwt } = session;
+    if (user === null && jwt === null) {
       return {
         status: 302,
-        redirect: "/login",
+        redirect: '/login',
       };
     }
-    return {
-      props: { user },
+    return await {
+      props: { user, jwt },
     };
   }
 </script>
 
 <script>
-  import UserAssetCard from "$lib/components/dashboard/user-asset-card.svelte";
+  import UserAssetCard from '$lib/components/dashboard/user-asset-card.svelte';
+  import { GRAPHQL_URI } from '../../lib/config';
+  import { GET_WEBSITES } from '../../lib/graphql/requests';
+  import { post } from '$lib/api.js';
+  import { digitalAsset } from '$lib/assetStore';
   export let user;
+  export let jwt;
+  let items;
+
+  async function getUserDigitalAssets() {
+    // Get from store before calling API again
+    if ($digitalAsset) {
+      items = $digitalAsset;
+      return items;
+    }
+
+    if (user && jwt) {
+      const res = await post(GRAPHQL_URI, JSON.parse(GET_WEBSITES), jwt)
+        .then((res) => {
+          items = res.data.digitalAssets;
+        })
+        .catch((error) => console.log(error));
+    }
+    digitalAsset.set(items);
+    return items;
+  }
+  
+  let promise = getUserDigitalAssets();
 </script>
 
 <!-- component -->
@@ -45,6 +70,16 @@
             class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
             >Settings</a
           >
+          <a
+            href="#"
+            class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
+            >Account</a
+          >
+          <a
+            href="#"
+            class="mt-3 py-2 text-sm text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded"
+            >Billing</a
+          >
         </nav>
       </div>
 
@@ -70,7 +105,7 @@
 
             <div>
               <h1 class="text-2xl font-medium text-white">
-                Welcome {user.username}
+                Welcome {user.legalName}
               </h1>
             </div>
           </div>
@@ -81,7 +116,14 @@
             <div
               class="grid place-items-center h-96 text-gray-300 text-xl border-4 border-gray-300 border-dashed"
             >
-              <UserAssetCard {user} />
+              <!-- pass the user.digital_assets array as a prop to user assets card-->
+              {#await promise}
+                <p>Loading...</p>
+              {:then data}
+                {#each items as item}
+                  <UserAssetCard digitalAsset={item} />
+                {/each}
+              {/await}
             </div>
           </div>
         </main>

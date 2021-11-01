@@ -1,45 +1,57 @@
 // import fetch from "node-fetch";
-import { BASE_LOGIN_URI } from "$lib/config";
 
-const base = BASE_LOGIN_URI;
-
-async function send({ method, data, token }) {
+async function send({ route, method, data = null, token }) {
   const opts = { method, headers: {} };
 
-  // console.log("Method", method, "Data", data, "Token", token);
+  // console.log('Method', method, 'Data', data, 'Token', token);
 
   if (data) {
-    opts.headers["Content-Type"] = "application/json";
+    opts.headers['Content-Type'] = 'application/json';
     opts.body = JSON.stringify(data);
   }
 
   if (token) {
-    opts.headers["Authorization"] = `Token ${token}`;
+    opts.headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return fetch(`${base}`, opts)
-    .then((r) => r.text())
+  // console.log(opts);
+
+  return fetch(`${route}`, opts)
+    .then((r) => {
+      return r.text();
+    })
     .then((json) => {
       try {
         return JSON.parse(json);
       } catch (err) {
-        return json;
+        return false;
       }
+    })
+    .catch((err) => {
+      throw new Error(err);
     });
 }
 
-export function get(token) {
-  return send({ method: "GET", token });
+export function get(route, token) {
+  return send({ route, method: 'GET', token }).catch((err) => {
+    throw new Error('Something went wrong');
+  });
 }
 
-export function del(token) {
-  return send({ method: "DELETE", token });
+export function del(route, data, token) {
+  return send({ route, method: 'DELETE', data, token }).catch((err) => {
+    throw new Error('Something went wrong');
+  });
 }
 
-export function post(data, token) {
-  return send({ method: "POST", data, token });
+export function post(route, data, token) {
+  return send({ route, method: 'POST', data, token }).catch((err) => {
+    throw new Error('Something went wrong');
+  });
 }
 
-export function put(data, token) {
-  return send({ method: "PUT", data, token });
+export function put(route, data, token) {
+  return send({ route, method: 'PUT', data, token }).catch((err) => {
+    throw new Error('Something went wrong');
+  });
 }

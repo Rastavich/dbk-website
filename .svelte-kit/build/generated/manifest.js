@@ -1,21 +1,21 @@
 const c = [
-	() => import("..\\..\\..\\src\\routes\\__layout.svelte"),
-	() => import("..\\..\\..\\src\\routes\\__error.svelte"),
-	() => import("..\\..\\..\\src\\routes\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\terms-of-service\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\privacy-policy\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\changelog\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\dashboard\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\features\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\contact\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\pricing\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\logout\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\signup\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\about\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\login\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\blog\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\docs\\index.svelte"),
-	() => import("..\\..\\..\\src\\routes\\docs\\[slug].svelte")
+	() => import("../../../src/routes/__layout.svelte"),
+	() => import("../../../src/routes/__error.svelte"),
+	() => import("../../../src/routes/index.svelte"),
+	() => import("../../../src/routes/terms-of-service/index.svelte"),
+	() => import("../../../src/routes/privacy-policy/index.svelte"),
+	() => import("../../../src/routes/changelog/index.svelte"),
+	() => import("../../../src/routes/dashboard/index.svelte"),
+	() => import("../../../src/routes/features/index.svelte"),
+	() => import("../../../src/routes/contact/index.svelte"),
+	() => import("../../../src/routes/pricing/index.svelte"),
+	() => import("../../../src/routes/logout/index.svelte"),
+	() => import("../../../src/routes/signup/index.svelte"),
+	() => import("../../../src/routes/about/index.svelte"),
+	() => import("../../../src/routes/login/index.svelte"),
+	() => import("../../../src/routes/blog/index.svelte"),
+	() => import("../../../src/routes/docs/index.svelte"),
+	() => import("../../../src/routes/docs/[slug].svelte")
 ];
 
 const d = decodeURIComponent;
@@ -73,4 +73,6 @@ export const routes = [
 	[/^\/docs\/([^/]+?)\/?$/, [c[0], c[16]], [c[1]], (m) => ({ slug: d(m[1])})]
 ];
 
+// we import the root layout/error components eagerly, so that
+// connectivity errors after initialisation don't nuke the app
 export const fallback = [c[0](), c[1]()];

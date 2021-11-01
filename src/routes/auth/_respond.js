@@ -3,19 +3,21 @@ export function respond(body) {
     return { status: 401, body };
   }
 
-  // console.log("Body.User", body.user);
+  // console.log('THIS IS THE Body', body.jwt);
 
   const user = JSON.stringify(body.user);
-  const jwt = body.jwt;
+  const jwt = JSON.stringify(body.jwt);
 
-  return {
-    headers: {
-      "set-cookie": [
-        `jwt=${jwt}; Path=/; HttpOnly; Secure`,
-        `user=${user}; Path=/; HttpOnly; Secure`,
-      ],
-    },
+  if (user && jwt) {
+    return {
+      headers: {
+        'set-cookie': [
+          `jwt=${jwt}; Path=/; HttpOnly; Secure`,
+          `user=${user}; Path=/; HttpOnly; Secure`,
+        ],
+      },
 
-    body,
-  };
+      body,
+    };
+  }
 }

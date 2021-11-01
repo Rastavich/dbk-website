@@ -23,3 +23,6 @@ export const GET_BLOGS = `
     }
   }
 `;
+
+export const GET_WEBSITES =
+  '{"query":"{\\n    digitalAssets {\\n      websites {\\n        url\\n      }\\n    }\\n  }"}';
