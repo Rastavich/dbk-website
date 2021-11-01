@@ -1,7 +1,7 @@
 <script>
-  export let text;
-  export let clickEvent;
-  export let href;
+  export let text = 'Default';
+  export let clickEvent = null;
+  export let href = '/';
 </script>
 
 <a

@@ -38,7 +38,7 @@
         <Button text="Dashboard" href="dashboard" />
       {:else}
         <div
-          class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left m-auto"
+          class="lg:flex-initial justify-center lg:items-start md:items-start text-center md:text-left m-auto md:m-0 lg:m-0"
         >
           <Button text="Try Free!" href="signup" />
 
