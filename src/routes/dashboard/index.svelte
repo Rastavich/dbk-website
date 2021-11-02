@@ -1,4 +1,5 @@
 <script context="module">
+  import Button from '$lib/components/generics/button.svelte';
   export async function load({ session }) {
     let { user, jwt } = session;
     if (user === null && jwt === null) {
@@ -19,6 +20,7 @@
   import { GET_WEBSITES } from '../../lib/graphql/requests';
   import { post } from '$lib/api.js';
   import { digitalAsset } from '$lib/assetStore';
+
   export let user;
   export let jwt;
   let items;
@@ -40,8 +42,13 @@
     digitalAsset.set(items);
     return items;
   }
-  
+
   let promise = getUserDigitalAssets();
+
+  // function that uses tailwindcss to toggle the dashboard left side bar open/closed
+  function toggleSidebar() {
+    document.getElementById('dashboard-sidebar').classList.toggle('hidden');
+  }
 </script>
 
 <!-- component -->
@@ -49,15 +56,18 @@
   <div x-data="">
     <div class="flex h-screen bg-gray-800 font-roboto">
       <div
+        id="opacity"
         class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"
       />
 
       <div
-        class="fixed z-30 inset-y-0 left-0 w-60 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0"
+        id="dashboard-sidebar"
+        class="fixed z-30 inset-y-0 left-0 w-60 sm:w-32 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0 dashboard-sidebar"
       >
         <div class="flex items-center justify-center mt-8">
           <div class="flex items-center">
             <span class="text-white text-2xl font-semibold">Dashboard</span>
+            <Button text="X" href="" clickEvent={toggleSidebar} />
           </div>
         </div>
 
@@ -86,8 +96,11 @@
       <div class="flex-1 flex flex-col overflow-hidden">
         <header class="flex justify-between items-center p-6">
           <div class="flex items-center space-x-4 lg:space-x-0">
-            <button class="text-gray-300 focus:outline-none lg:hidden">
-              <svg
+            <button
+              class="text-gray-300 focus:outline-none lg:hidden"
+              on:click={toggleSidebar}
+            >
+              <sv
                 class="h-6 w-6"
                 viewBox="0 0 24 24"
                 fill="none"
@@ -100,7 +113,7 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
-              </svg>
+              </sv>
             </button>
 
             <div>
