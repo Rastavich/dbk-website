@@ -1,8 +1,9 @@
-const { tailwindExtractor } = require("tailwindcss/lib/lib/purgeUnusedStyles");
+const { tailwindExtractor } = require('tailwindcss/lib/lib/purgeUnusedStyles');
 
 module.exports = {
+  mode: 'jit',
   purge: {
-    content: ["./src/**/*.{html,js,svelte,ts}"],
+    content: ['./src/**/*.{html,js,svelte,ts}'],
     options: {
       defaultExtractor: (content) => [
         // If this stops working, please open an issue at https://github.com/svelte-add/tailwindcss/issues rather than bothering Tailwind Labs about it
@@ -20,30 +21,30 @@ module.exports = {
       typography: {
         DEFAULT: {
           css: {
-            color: "#fff",
+            color: '#fff',
             a: {
-              color: "#3182ce",
-              "&:hover": {
-                color: "#2c5282",
+              color: '#3182ce',
+              '&:hover': {
+                color: '#2c5282',
               },
             },
             h1: {
-              color: "#fff",
+              color: '#fff',
             },
             h2: {
-              color: "#fff",
+              color: '#fff',
             },
             h3: {
-              color: "#fff",
+              color: '#fff',
             },
             strong: {
-              color: "#3182ce",
-              "&:hover": {
-                color: "#2c5282",
+              color: '#3182ce',
+              '&:hover': {
+                color: '#2c5282',
               },
             },
             blockquote: {
-              color: "#fff",
+              color: '#fff',
             },
           },
         },
@@ -53,5 +54,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [require('@tailwindcss/typography')],
 };

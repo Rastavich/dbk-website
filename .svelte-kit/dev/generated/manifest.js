@@ -5,7 +5,10 @@ const c = [
 	() => import("../../../src/routes/terms-of-service/index.svelte"),
 	() => import("../../../src/routes/privacy-policy/index.svelte"),
 	() => import("../../../src/routes/changelog/index.svelte"),
+	() => import("../../../src/routes/dashboard/__layout.svelte"),
 	() => import("../../../src/routes/dashboard/index.svelte"),
+	() => import("../../../src/routes/dashboard/overview.svelte"),
+	() => import("../../../src/routes/dashboard/sideBar.svelte"),
 	() => import("../../../src/routes/features/index.svelte"),
 	() => import("../../../src/routes/contact/index.svelte"),
 	() => import("../../../src/routes/pricing/index.svelte"),
@@ -34,41 +37,47 @@ export const routes = [
 	[/^\/changelog\/?$/, [c[0], c[5]], [c[1]]],
 
 	// src/routes/dashboard/index.svelte
-	[/^\/dashboard\/?$/, [c[0], c[6]], [c[1]]],
+	[/^\/dashboard\/?$/, [c[0], c[6], c[7]], [c[1]]],
+
+	// src/routes/dashboard/overview.svelte
+	[/^\/dashboard\/overview\/?$/, [c[0], c[6], c[8]], [c[1]]],
+
+	// src/routes/dashboard/sideBar.svelte
+	[/^\/dashboard\/sideBar\/?$/, [c[0], c[6], c[9]], [c[1]]],
 
 	// src/routes/features/index.svelte
-	[/^\/features\/?$/, [c[0], c[7]], [c[1]]],
+	[/^\/features\/?$/, [c[0], c[10]], [c[1]]],
 
 	// src/routes/contact/index.svelte
-	[/^\/contact\/?$/, [c[0], c[8]], [c[1]]],
+	[/^\/contact\/?$/, [c[0], c[11]], [c[1]]],
 
 	// src/routes/pricing/index.svelte
-	[/^\/pricing\/?$/, [c[0], c[9]], [c[1]]],
+	[/^\/pricing\/?$/, [c[0], c[12]], [c[1]]],
 
 	// src/routes/logout/index.svelte
-	[/^\/logout\/?$/, [c[0], c[10]], [c[1]]],
+	[/^\/logout\/?$/, [c[0], c[13]], [c[1]]],
 
 	// src/routes/signup/index.svelte
-	[/^\/signup\/?$/, [c[0], c[11]], [c[1]]],
+	[/^\/signup\/?$/, [c[0], c[14]], [c[1]]],
 
 	// src/routes/about/index.svelte
-	[/^\/about\/?$/, [c[0], c[12]], [c[1]]],
+	[/^\/about\/?$/, [c[0], c[15]], [c[1]]],
 
 	// src/routes/login/index.svelte
-	[/^\/login\/?$/, [c[0], c[13]], [c[1]]],
+	[/^\/login\/?$/, [c[0], c[16]], [c[1]]],
 
 	,
 
 	,
 
 	// src/routes/blog/index.svelte
-	[/^\/blog\/?$/, [c[0], c[14]], [c[1]]],
+	[/^\/blog\/?$/, [c[0], c[17]], [c[1]]],
 
 	// src/routes/docs/index.svelte
-	[/^\/docs\/?$/, [c[0], c[15]], [c[1]]],
+	[/^\/docs\/?$/, [c[0], c[18]], [c[1]]],
 
 	// src/routes/docs/[slug].svelte
-	[/^\/docs\/([^/]+?)\/?$/, [c[0], c[16]], [c[1]], (m) => ({ slug: d(m[1])})]
+	[/^\/docs\/([^/]+?)\/?$/, [c[0], c[19]], [c[1]], (m) => ({ slug: d(m[1])})]
 ];
 
 // we import the root layout/error components eagerly, so that

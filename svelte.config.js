@@ -1,5 +1,5 @@
-import sveltePreprocess from 'svelte-preprocess';
-import adapter from "@sveltejs/adapter-vercel";
+import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-vercel';
 // import adapter from '@sveltejs/adapter-static';
 // const pkg = require("./package.json");
 
@@ -20,10 +20,7 @@ const config = {
   },
 
   preprocess: [
-    sveltePreprocess({
-      defaults: {
-        style: 'postcss',
-      },
+    preprocess({
       postcss: true,
     }),
   ],
